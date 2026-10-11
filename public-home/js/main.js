@@ -133,6 +133,8 @@ menuLinks.forEach(function(link) {
 
         this.classList.add("active");
 
+        closeSidebar();
+
     });
 
 });
@@ -198,15 +200,19 @@ function loadStudents() {
             <td>
 
                 <button
+                    type="button"
                     class="btn btn-sm btn-warning"
                     onclick="editStudent('${student.maSV}')"
+                    aria-label="Sửa sinh viên ${student.maSV}"
                 >
                     <i class="bi bi-pencil"></i>
                 </button>
 
                 <button
+                    type="button"
                     class="btn btn-sm btn-danger"
                     onclick="deleteStudent('${student.maSV}')"
+                    aria-label="Xóa sinh viên ${student.maSV}"
                 >
                     <i class="bi bi-trash"></i>
                 </button>
@@ -459,15 +465,39 @@ document
 // MENU MOBILE
 // =============================
 
-document
-    .getElementById("menuBtn")
-    .addEventListener("click", function() {
+const menuBtn = document.getElementById("menuBtn");
+const sidebarBackdrop = document.getElementById("sidebarBackdrop");
 
-        document
-            .querySelector(".sidebar")
-            .classList.toggle("show");
+function setSidebar(open) {
 
-    });
+    document.body.classList.toggle("sidebar-open", open);
+    menuBtn.setAttribute("aria-expanded", String(open));
+    sidebarBackdrop.tabIndex = open ? 0 : -1;
+
+}
+
+function closeSidebar() {
+
+    setSidebar(false);
+
+}
+
+menuBtn.addEventListener("click", function() {
+
+    const open = !document.body.classList.contains("sidebar-open");
+    setSidebar(open);
+
+});
+
+sidebarBackdrop.addEventListener("click", closeSidebar);
+
+document.addEventListener("keydown", function(event) {
+
+    if (event.key === "Escape") {
+        closeSidebar();
+    }
+
+});
 
 
 // =============================
