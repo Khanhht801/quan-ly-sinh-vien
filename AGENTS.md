@@ -4,7 +4,8 @@ Tệp này áp dụng cho toàn bộ repository. Mọi agent phải đọc trư�
 
 ## 1. Mục tiêu chung
 
-- Xây dựng hệ thống quản lý sinh viên dễ đọc, dễ bảo trì và có thể phát triển từ prototype HTML/CSS/JavaScript hiện tại thành ứng dụng Flask + MySQL.
+- Xây dựng hệ thống quản lý sinh viên cấp khoa CNTT dễ đọc, dễ bảo trì và có thể phát triển từ prototype HTML/CSS/JavaScript hiện tại thành ứng dụng full-stack.
+- Chưa mặc định backend hoặc database. Chỉ chốt Laravel, Express, Django, ASP.NET và MySQL/PostgreSQL/SQL Server khi nhóm đưa ra quyết định chính thức.
 - Ưu tiên giải pháp đơn giản, đúng yêu cầu trong `docs/project-specification.md`; không tự ý thêm framework, thư viện hoặc tính năng ngoài phạm vi.
 - Mỗi thay đổi phải nhỏ, có mục đích rõ ràng và không làm hỏng chức năng đang hoạt động.
 - Khi đặc tả, mã nguồn và yêu cầu mới nhất của người dùng mâu thuẫn nhau, ưu tiên yêu cầu mới nhất của người dùng và nêu rõ phần mâu thuẫn.
@@ -20,47 +21,56 @@ Tệp này áp dụng cho toàn bộ repository. Mọi agent phải đọc trư�
 - Không commit thư mục môi trường và file sinh tự động như `.venv/`, `__pycache__/`, `.pytest_cache/`, coverage, log, file database cục bộ và secrets.
 - Khi di chuyển hoặc đổi tên file, phải cập nhật đồng thời mọi đường dẫn import, liên kết CSS/JS, template, tài liệu và test liên quan.
 
-### 2.2. Cấu trúc đích khi chuyển sang Flask
+### 2.2. Cấu trúc frontend hiện tại
 
 ```text
 quanLySinhVien/
-├── app/
-│   ├── __init__.py
-│   ├── config.py
-│   ├── extensions.py
-│   ├── models/
-│   ├── routes/
-│   ├── services/
-│   ├── repositories/
-│   ├── templates/
-│   │   ├── layouts/
-│   │   ├── components/
-│   │   └── pages/
-│   └── static/
-│       ├── css/
-│       ├── js/
-│       ├── images/
-│       └── vendor/
-├── data/
+├── index.html
+├── style.md
+├── public-home/
+│   ├── css/
+│   │   └── style.css
+│   ├── js/
+│   │   └── main.js
+│   ├── images/
+│   │   ├── icons/
+│   │   ├── banners/
+│   │   ├── teachers/
+│   │   ├── partners/
+│   │   └── students/
+│   └── fonts/
+├── pages/
+│   ├── students/
+│   ├── classes/
+│   ├── subjects/
+│   ├── grades/
+│   ├── reports/
+│   ├── communication/
+│   └── account/
+├── assets/
 ├── docs/
-├── migrations/
-├── scripts/
+│   └── project-specification.md
+├── database/
+│   ├── migrations/
+│   └── seeds/
+├── server/
 ├── tests/
-│   ├── unit/
-│   ├── integration/
-│   └── fixtures/
-├── .env.example
-├── .gitignore
 ├── AGENTS.md
-├── README.md
-├── requirements.txt
-└── run.py
+└── README.md
 ```
 
-- Đây là cấu trúc đích, không phải lý do để agent tự động tạo hàng loạt thư mục rỗng.
-- Prototype hiện tại được đặt tại `app/templates/pages/student-management.html`; CSS và JavaScript tương ứng nằm trong `app/static/`.
-- Trước khi Flask được khởi tạo, HTML dùng đường dẫn tương đối để vẫn có thể mở trực tiếp. Khi tích hợp Flask/Jinja, chuyển các đường dẫn tài nguyên sang `url_for('static', filename=...)` trong cùng thay đổi.
-- Chỉ tạo một tầng như `services/` hoặc `repositories/` khi thực sự có logic thuộc tầng đó; không tạo abstraction rỗng.
+- `index.html` là landing page duy nhất và là entry point của GitHub Pages.
+- `style.md` là style guide của dự án: không xóa và phải cập nhật khi thay đổi màu sắc, typography, spacing hoặc component chung.
+- `public-home/` chỉ chứa tài nguyên được homepage sử dụng. CSS riêng đặt trong `css/`, JavaScript riêng đặt trong `js/`.
+- Thư viện bên thứ ba chỉ được self-host trong `public-home/` khi dự án thực sự sử dụng và có lý do rõ ràng; không thêm jQuery, Slick, AOS hoặc Bootstrap local chỉ để dự phòng.
+- `pages/` dành cho các trang HTML phụ; `assets/` dành cho SVG, video, PDF và tài nguyên dùng chung giữa nhiều trang.
+- Các trang/module nghiệp vụ bám theo đặc tả: sinh viên, lớp-ngành, môn học-điểm, người dùng-phân quyền, thống kê-báo cáo và giao tiếp.
+- Chat GV-SV, chat SV-SV và diễn đàn cùng thuộc nhóm `communication/`; không tạo ba hệ thống component/data tách biệt nếu có thể tái sử dụng.
+- `database/` chỉ được tạo khi bắt đầu schema/migration; `server/` chỉ được tạo sau khi chốt backend. Cấu trúc con của `server/` phải theo convention chính thức của framework được chọn.
+- `tests/` phản chiếu các module nghiệp vụ, ưu tiên auth/RBAC, CRUD sinh viên, tính điểm, import/export, cảnh báo học tập và quyền truy cập chat.
+- Chỉ tạo thư mục con khi có file thực tế cần đặt vào; không tạo hàng loạt thư mục rỗng để mô phỏng cấu trúc.
+- CSS/JS có thể dùng query version như `?v=1.0.0`. Phải tăng version khi thay đổi có thể bị trình duyệt hoặc CDN cache.
+- Khi tích hợp backend, giữ contract API và module nghiệp vụ rõ ràng; không di chuyển frontend vào cấu trúc framework cho đến khi stack được chốt.
 
 ## 3. Quy ước đặt tên
 
@@ -110,13 +120,16 @@ quanLySinhVien/
 - Xử lý lỗi bất đồng bộ bằng `try/catch`, hiển thị thông báo hữu ích và không nuốt lỗi.
 - Không gắn hàm mới vào `window`; dùng ES modules khi cấu trúc ứng dụng cho phép.
 
-### 4.5. Python/Flask
+### 4.5. Backend và API
 
-- Tuân thủ PEP 8; public function cần type hint, docstring khi hành vi không tự giải thích.
-- Dùng application factory và Blueprint; route chỉ nhận request, kiểm tra quyền, gọi service và tạo response.
-- Logic nghiệp vụ đặt ở `services/`; truy cập dữ liệu đặt ở model/repository, không viết query dài trực tiếp trong route.
-- Validate và chuẩn hóa mọi dữ liệu đầu vào ở phía server. Trả lỗi có cấu trúc, không để lộ stack trace cho người dùng.
-- Dùng migration cho thay đổi schema; không sửa database production bằng thao tác thủ công không được ghi lại.
+- Tuân thủ convention chính thức của framework được nhóm chọn; không trộn pattern từ nhiều framework.
+- Controller/route chỉ nhận request, kiểm tra xác thực/phân quyền, gọi tầng nghiệp vụ và tạo response.
+- Logic nghiệp vụ đặt ở service/use-case; truy cập dữ liệu đặt ở model/repository, không viết query dài trực tiếp trong controller.
+- API tổ chức theo các module trong đặc tả và có response/error schema nhất quán.
+- Validate và chuẩn hóa mọi dữ liệu đầu vào ở phía server. Không tin dữ liệu hoặc quyền được gửi từ frontend.
+- Điểm tổng kết, GPA, cảnh báo học tập và phân quyền phải được tính/kiểm tra ở backend, không chỉ ở JavaScript phía client.
+- Dùng migration cho thay đổi schema và seed cho dữ liệu demo; không sửa database dùng chung bằng thao tác thủ công không được ghi lại.
+- Chat và thông báo real-time phải có cơ chế lưu bền vững, kiểm tra người tham gia và giới hạn loại/kích thước file đính kèm.
 
 ## 5. Dữ liệu, bảo mật và quyền truy cập
 

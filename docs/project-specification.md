@@ -65,72 +65,74 @@ Vì vậy, nhóm quyết định xây dựng một **website quản lý sinh vi�
 
 Để hệ thống không trở nên "na ná" các bài tập quản lý sinh viên thông thường, nhóm đề xuất tích hợp các **tính năng sáng tạo** sau:
 
-#### 🚀 Nhóm 1: Phân tích thông minh (Python + pandas)
+#### 🚀 Nhóm 1: Phân tích thông minh
 
 1. **Cảnh báo học tập sớm (Early Warning System)**
-   - Tự động phát hiện sinh viên có nguy cơ không đủ điều kiện dự thi kết thúc học phần (dựa trên số buổi vắng, điểm chuyên cần, điểm giữa kỳ)
-   - Triển khai bằng **MySQL Trigger** (tự động chạy khi nhập điểm) + **Python script** (chạy định kỳ)
-   - Hiển thị danh sách cảnh báo trên Dashboard của CVHT
+   - Tự động phát hiện sinh viên có nguy cơ học yếu (dựa trên điểm chuyên cần, điểm giữa kỳ, số buổi vắng)
+   - Gửi thông báo đến CVHT và sinh viên
+   - Gợi ý kế hoạch cải thiện kết quả học tập
 
+2. **Phân tích xu hướng (Trend Analytics)**
+   - Dự đoán kết quả cuối kỳ dựa trên điểm giữa kỳ (theo công thức thống kê đơn giản)
+   - Phân nhóm sinh viên theo phong cách học tập (Clustering)
 
-2. **Phân tích xu hướng điểm (Trend Analytics)**
-   - Dùng **Python pandas + matplotlib** phân tích dữ liệu điểm từ MySQL
-   - Xuất biểu đồ xu hướng GPA qua các kỳ
-   - Top 10 sinh viên có điểm cải thiện vượt bậc
-   - Biểu đồ được nhúng vào trang Dashboard (dạng ảnh PNG tĩnh)
+#### 💻 Nhóm 2: Công nghệ hiện đại
 
-#### 💻 Nhóm 2: Tiện ích giao diện
+3. **PWA (Progressive Web App)**
+   - Có thể cài đặt như app trên điện thoại
+   - Hoạt động offline một phần (xem thông tin đã cache)
+   - Push notification cho thông báo quan trọng
 
-3. **AJAX auto-refresh (Cập nhật không cần reload)**
-   - Dùng **JavaScript fetch()** + `setInterval()` để tự động reload một số khu vực
-   - Áp dụng cho: tin nhắn chat mới, thông báo điểm mới
-   - Không cần WebSocket — đơn giản, phù hợp đồ án
+4. **Real-time updates**
+   - Cập nhật điểm, thông báo theo thời gian thực (WebSocket)
+   - Không cần refresh trang
 
-4. **Responsive Design (Bootstrap 5)**
-   - Giao diện tương thích Desktop, Tablet, Mobile
-   - Dùng class Bootstrap: `container-fluid`, `row`, `col-md-*`
+5. **Dark Mode & Responsive**
+   - Hỗ trợ chế độ sáng/tối
+   - Tương thích đầy đủ trên mobile, tablet, desktop
 
-5. **Dark Mode (Tùy chọn)**
-   - Nút chuyển đổi Sáng/Tối
-   - Lưu lựa chọn vào `localStorage` của trình duyệt
-   - Chỉ cần CSS variables — không cần framework phức tạp
+6. **QR Code cho sinh viên**
+   - Mỗi sinh viên có mã QR định danh
+   - Điểm danh, tra cứu nhanh bằng QR
 
 #### 👥 Nhóm 3: Tính năng xã hội hóa & học tập
 
-6. **Hệ thống Chat (gộp GV-SV và SV-SV)**
-   - **Mục đích:** Một module chat duy nhất, dùng chung cho cả 3 loại cuộc trò chuyện:
-     - **Chat 1-1 Giảng viên - Sinh viên:** SV ↔ CVHT/GV bộ môn (hỏi bài, xin tài liệu)
-     - **Chat 1-1 Sinh viên - Sinh viên:** SV ↔ SV (cùng lớp/cùng ngành)
-     - **Chat nhóm:** Nhóm theo lớp, nhóm tự tạo, nhóm theo môn học
-   - **Giao diện thống nhất:** Giống Messenger/Zalo — danh sách cuộc trò chuyện bên trái, khung chat bên phải
-   - **Chức năng chung:**
-     - Gửi text, emoji, file đính kèm (ảnh, PDF, Word — tối đa 5MB)
-     - Hiển thị avatar, họ tên, trạng thái online/offline
-     - Hiển thị "đã gửi ✓", "đã nhận ✓✓", "đã đọc ✓✓ (xanh)"
-     - Tìm kiếm trong lịch sử chat
-     - Lưu lịch sử chat, có thể cuộn lên xem lại
-   - **Cập nhật real-time đơn giản:** AJAX polling mỗi 3 giây (dùng chung 1 endpoint)
-   - **Triển khai:**
-     - Flask route `/api/chat/messages?conv_id=<id>&since=<timestamp>` trả JSON
-     - JS dùng chung 1 file `static/js/chat.js` cho mọi loại chat
-     - Database dùng chung 1 schema (`Conversation`, `Message`)
+7. **Chat Giảng viên - Sinh viên**
+   - Sinh viên nhắn tin trực tiếp với giảng viên (CVHT hoặc GV bộ môn)
+   - Hỗ trợ nhắn tin văn bản, gửi file đính kèm
+   - Thông báo real-time khi có tin nhắn mới
+   - Lưu lịch sử chat, có thể tìm kiếm lại
+   - Phân loại cuộc trò chuyện theo môn học/lớp
 
-7. **Diễn đàn khoa CNTT**
-   - Đăng bài theo tag (theo ngành, môn học)
-   - Upload tài liệu (ảnh, PDF, Word) — lưu vào `static/uploads/`
-   - Upvote/downvote cho câu trả lời (1 user chỉ vote 1 lần/bài)
-   - Bình luận nhiều cấp
-   - Đánh dấu câu trả lời hay nhất
-   - CRUD cơ bản: Tạo, xem, sửa, xóa bài viết
+8. **Chat Sinh viên - Sinh viên**
+   - Sinh viên cùng lớp/cùng ngành nhắn tin với nhau
+   - Tạo nhóm chat theo lớp, theo nhóm học tập
+   - Chia sẻ tài liệu, hình ảnh, link trong nhóm
+   - Hỗ trợ mention (@tên), emoji
+   - Online/offline indicator
 
-8. **Gamification (Bảng xếp hạng & Huy hiệu)**
-   - **Bảng xếp hạng** Top 10 SV có GPA cao nhất (query đơn giản)
-   - **Huy hiệu (badges)** sinh viên xuất sắc — hiển thị trên trang cá nhân
-   - Một số huy hiệu:
-     - 🏆 "Sinh viên xuất sắc" - GPA ≥ 9.0
-     - ⭐ "Cải thiện vượt bậc" - Tăng ≥ 1.0 điểm GPA so với kỳ trước
-     - 📚 "Đóng góp viên" - Đăng ≥ 10 bài hữu ích trên diễn đàn
-     - 💯 "Điểm tuyệt đối" - Đạt 10/10 một môn học
+9. **Diễn đàn sinh viên khoa CNTT**
+   - Chia sẻ tài liệu, hỏi bài, thảo luận
+   - Upvote/downvote cho câu trả lời hay
+   - Phân loại theo ngành/môn học
+
+10. **Đánh giá giảng viên (ẩn danh)**
+    - Sinh viên đánh giá chất lượng giảng dạy sau mỗi học kỳ
+    - Tổng hợp feedback cho khoa
+
+11. **Gamification (Trò chơi hóa)**
+    - Bảng xếp hạng sinh viên xuất sắc
+    - Hệ thống huy hiệu (badges): "Sinh viên tiêu biểu", "Cải thiện vượt bậc",...
+    - Điểm thưởng cho các hoạt động tốt
+
+12. **Portfolio sinh viên**
+    - Sinh viên tự tạo portfolio cá nhân (dự án cá nhân, chứng chỉ, kỹ năng)
+    - CV tự động từ dữ liệu trong hệ thống
+    - Chia sẻ link portfolio công khai
+
+13. **Tìm bạn học nhóm (Study Buddy Matching)**
+    - Gợi ý bạn học cùng lớp/cùng môn
+    - Dựa trên lịch học và sở thích
 
 ### 1.4. Mục tiêu dự án
 
@@ -186,7 +188,7 @@ Hệ thống xử lý trong **5 phân hệ chính**:
 │  4. Quản lý Người dùng & Phân quyền                        │
 │  5. Thống kê & Xuất báo cáo                                │
 └────────────────────────────────────────────────────────────┘
-
+```
 
 ### 2.3. Phạm vi dữ liệu
 - Thông tin cá nhân của sinh viên (hồ sơ, liên lạc, quê quán,...)
@@ -428,11 +430,16 @@ Cho phép tổng hợp, phân tích dữ liệu phục vụ công tác quản l�
 | UC14 | Phân quyền | Admin |
 | UC15 | Import dữ liệu từ Excel | Admin, Giáo vụ |
 | **UC16** | **Cảnh báo học tập sớm (Early Warning)** | **CVHT, Giáo vụ** |
-| **UC17** | **Hệ thống Chat (gộp GV-SV, SV-SV, nhóm)** | **GV, SV, Giáo vụ** |
-| **UC18** | **Diễn đàn khoa CNTT** | **Sinh viên, Giảng viên** |
-| **UC19** | **Phân tích xu hướng điểm (Python pandas)** | **Giáo vụ, CVHT** |
-| **UC20** | **Bảng xếp hạng & Huy hiệu (Gamification)** | **Tất cả** |
-| **UC21** | **AJAX auto-refresh (chat, thông báo)** | **Tất cả** |
+| **UC17** | **Chat Giảng viên - Sinh viên** | **Giảng viên, Sinh viên** |
+| **UC18** | **Chat Sinh viên - Sinh viên (cá nhân & nhóm)** | **Sinh viên** |
+| **UC19** | **Phân tích xu hướng điểm (Trend Analytics)** | **Giáo vụ** |
+| **UC20** | **Đăng bài / Hỏi bài trên diễn đàn khoa** | **Sinh viên, Giảng viên** |
+| **UC21** | **Đánh giá giảng viên (ẩn danh)** | **Sinh viên** |
+| **UC22** | **Xem bảng xếp hạng / Huy hiệu (Gamification)** | **Tất cả** |
+| **UC23** | **Tạo & Chia sẻ Portfolio cá nhân** | **Sinh viên** |
+| **UC24** | **Tìm bạn học nhóm (Study Buddy)** | **Sinh viên** |
+| **UC25** | **Nhận thông báo Push (PWA)** | **Tất cả** |
+| **UC26** | **Tra cứu bằng QR Code** | **Giáo vụ, CVHT** |
 
 ### 5.5. Đặc tả tóm tắt các Use Case sáng tạo
 
@@ -457,90 +464,76 @@ Cho phép tổng hợp, phân tích dữ liệu phục vụ công tác quản l�
 4. Gửi thông báo cho CVHT phụ trách
 5. Gửi email/thông báo cho sinh viên kèm lời khuyên
 
-#### UC17 - Hệ thống Chat (gộp GV-SV, SV-SV & nhóm)
+#### UC17 - Chat Giảng viên - Sinh viên
 
-**Actor chính:** Giảng viên (CVHT, GV bộ môn), Sinh viên, Giáo vụ
-**Mô tả:** Hệ thống chat thống nhất, dùng chung cho mọi loại cuộc trò chuyện trong hệ thống: giữa GV với SV, giữa SV với SV, và chat nhóm (theo lớp, theo nhóm học tập, theo môn học). Tất cả dùng chung 1 giao diện, 1 cơ chế AJAX polling, 1 schema database.
+**Actor chính:** Giảng viên (CVHT hoặc GV bộ môn), Sinh viên
+**Mô tả:** Cho phép sinh viên nhắn tin trực tiếp với giảng viên để hỏi bài, trao đổi vấn đề học tập.
 
-**3 loại cuộc trò chuyện:**
-
-**a) Chat Giảng viên - Sinh viên (1-1):**
-- Sinh viên ↔ CVHT hoặc GV bộ môn
-- Mục đích: Hỏi bài, xin tài liệu, trao đổi vấn đề học tập
-- SV chọn GV từ danh sách (CVHT + GV dạy lớp/môn của SV)
+**Chức năng chính:**
+- Gửi/nhận tin nhắn văn bản real-time
+- Gửi file đính kèm (PDF, Word, hình ảnh)
+- Hiển thị trạng thái online/offline
+- Thông báo khi có tin nhắn mới (icon + âm thanh)
+- Lưu lịch sử trò chuyện
 - Phân loại cuộc hội thoại theo môn học/lớp
+- Có thể block người dùng gây spam
 
-**b) Chat Sinh viên - Sinh viên (1-1):**
-- Hai SV cùng lớp/cùng ngành nhắn tin riêng
+**Luồng chính:**
+1. Sinh viên chọn giảng viên muốn liên hệ (từ danh sách CVHT, danh sách GV bộ môn)
+2. Mở khung chat
+3. Nhập nội dung → Gửi
+4. Tin nhắn được lưu DB, đẩy real-time đến GV qua WebSocket
+5. GV nhận thông báo, phản hồi
+6. Cả hai bên đều thấy lịch sử cuộc trò chuyện
+
+**Dữ liệu cần lưu:**
+- Tin nhắn (người gửi, người nhận, nội dung, thời gian, file đính kèm)
+- Cuộc trò chuyện (cặp người dùng)
+- Trạng thái đã đọc/chưa đọc
+
+#### UC18 - Chat Sinh viên - Sinh viên
+
+**Actor chính:** Sinh viên
+**Mô tả:** Cho phép sinh viên nhắn tin với nhau theo nhiều hình thức: chat cá nhân 1-1, chat nhóm theo lớp/nhóm học tập.
+
+**Chức năng chính:**
+
+**a) Chat cá nhân (1-1):**
+- Hai sinh viên nhắn tin riêng với nhau
 - Hiển thị profile người chat (avatar, lớp, ngành)
 - Tìm kiếm bạn theo Mã SV, họ tên, lớp
 
-**c) Chat nhóm:**
-- Nhóm theo lớp (mỗi lớp có 1 nhóm chat tự động khi tạo lớp)
-- Nhóm tự tạo (SV tạo nhóm học tập)
-- Nhóm theo môn học (SV cùng đăng ký môn)
+**b) Chat nhóm:**
+- Nhóm theo lớp (mỗi lớp có 1 nhóm chat tự động)
+- Nhóm theo nhóm học tập (SV tự tạo nhóm)
+- Nhóm chat môn học (SV cùng đăng ký môn)
 - Thêm/xóa thành viên, đổi tên nhóm
 - Vai trò: Trưởng nhóm, thành viên
 
-**Chức năng chung cho mọi loại chat:**
-- **Giao diện:** Giống Messenger/Zalo — danh sách cuộc trò chuyện bên trái, khung chat bên phải
-- **Gửi tin nhắn:** Text, emoji, file đính kèm (ảnh, PDF, Word — tối đa 5MB)
-- **Hiển thị thông tin:** Avatar, họ tên, trạng thái online/offline
-- **Trạng thái tin nhắn:** Đã gửi ✓, Đã nhận ✓✓, Đã đọc ✓✓ (xanh)
-- **Lưu lịch sử chat**, có thể tìm kiếm theo từ khóa
-- **Cập nhật real-time đơn giản:** AJAX polling mỗi 3 giây (không cần WebSocket)
-- **Thông báo:** Badge đỏ trên menu khi có tin nhắn mới
+**Tính năng chung:**
+- Gửi tin nhắn văn bản, emoji, file đính kèm
+- Mention thành viên (@tên)
+- Reply tin nhắn cụ thể
+- Reaction (thả cảm xúc vào tin nhắn)
+- Trạng thái đã đọc
+- Tin nhắn ghim (quan trọng)
+- Tìm kiếm trong lịch sử chat
 
-**Luồng chính (chat 1-1):**
-1. User đăng nhập → Vào mục "Tin nhắn"
-2. Hệ thống hiển thị danh sách cuộc trò chuyện (cũ + mới)
-3. User chọn cuộc trò chuyện → Mở khung chat
-4. Nhập nội dung + (tùy chọn) file đính kèm → Nhấn "Gửi"
-5. Tin nhắn lưu DB, hiển thị ngay trong khung chat
-6. JS tự động gọi AJAX mỗi 3 giây để lấy tin nhắn mới
-7. Khi đối phương phản hồi → User thấy tin nhắn mới xuất hiện + badge đỏ
+**Luồng tạo nhóm chat (ví dụ):**
+1. Sinh viên vào mục "Nhóm chat"
+2. Nhấn "Tạo nhóm mới"
+3. Đặt tên nhóm, chọn thành viên (từ danh sách bạn cùng lớp)
+4. Hệ thống tạo phòng chat, thêm thành viên
+5. Cả nhóm nhận thông báo mời vào nhóm
+6. Bắt đầu chat
 
-**Luồng tạo nhóm chat:**
-1. SV vào mục "Nhóm chat" → Nhấn "Tạo nhóm mới"
-2. Đặt tên nhóm, chọn thành viên (từ danh sách bạn cùng lớp)
-3. Hệ thống tạo phòng chat, thêm thành viên
-4. Cả nhóm nhận thông báo mời vào nhóm
-5. Bắt đầu chat nhóm
+**Dữ liệu cần lưu:**
+- Phòng chat (1-1 hoặc nhóm)
+- Thành viên phòng chat
+- Tin nhắn (phòng, người gửi, nội dung, thời gian, file)
+- Trạng thái đã đọc theo người dùng
 
-**Dữ liệu cần lưu (Database):**
-- Bảng `Conversation` (Cuộc trò chuyện):
-  - `MaCV` INT PK AUTO_INCREMENT
-  - `LoaiChat` ENUM('GV_SV', 'SV_SV', 'NHOM') — phân biệt loại
-  - `TenNhom` NVARCHAR(100) NULL — chỉ dùng khi LoaiChat = 'NHOM'
-  - `MaMonHoc` VARCHAR(10) NULL FK — phân loại theo môn (cho chat GV-SV)
-  - `NgayTao` DATETIME
-- Bảng `ConversationMember` (Thành viên cuộc trò chuyện):
-  - `MaTV` INT PK
-  - `MaCV` INT FK → Conversation
-  - `MaNguoiDung` INT FK → User (MaNguoiDung)
-  - `VaiTro` ENUM('TRUONG_NHOM', 'THANH_VIEN') — chỉ dùng cho nhóm
-- Bảng `Message` (Tin nhắn):
-  - `MaTinNhan` INT PK AUTO_INCREMENT
-  - `MaCV` INT FK → Conversation
-  - `MaNguoiGui` INT FK → User
-  - `NoiDung` TEXT
-  - `FileKem` VARCHAR(255) NULL — đường dẫn file
-  - `ThoiGian` DATETIME
-  - `TrangThai` ENUM('DA_GUI', 'DA_NHAN', 'DA_DOC')
-
-**Công nghệ triển khai:**
-- **Backend (Flask):**
-  - Route `/api/chat/conversations` — lấy danh sách cuộc trò chuyện của user
-  - Route `/api/chat/messages?conv_id=<id>&since=<timestamp>` — lấy tin nhắn mới (polling)
-  - Route `/api/chat/send` (POST) — gửi tin nhắn mới
-  - Route `/api/chat/upload` (POST) — upload file đính kèm
-- **Frontend (JavaScript):**
-  - File `static/js/chat.js` — dùng chung cho mọi loại chat
-  - `setInterval(fetchMessages, 3000)` — polling mỗi 3 giây
-  - Hiển thị badge đỏ khi có tin nhắn chưa đọc
-- **Lưu file:** `static/uploads/chat/`
-
-#### UC18 - Diễn đàn khoa CNTT
+#### UC19 - Diễn đàn khoa CNTT
 
 **Actor chính:** Sinh viên, Giảng viên
 **Mô tả:** Nơi sinh viên các khóa/ngành trong khoa chia sẻ tài liệu, hỏi bài, thảo luận.
@@ -587,7 +580,7 @@ Cho phép tổng hợp, phân tích dữ liệu phục vụ công tác quản l�
    - Mã SV không được trùng
    - Email đúng định dạng
    - CCCD đúng định dạng (12 số)
-   - SĐT đúng định dạng (10 số)
+   - SĐT đúng định dạng (10-11 số)
 5. Lưu thành công → Hiển thị thông báo
 6. Hệ thống ghi log thao tác
 
@@ -732,11 +725,16 @@ Cho phép tổng hợp, phân tích dữ liệu phục vụ công tác quản l�
 | UC14 - Phân quyền | ✓ | | | | |
 | UC15 - Import Excel | ✓ | ✓ | | | |
 | **UC16 - Cảnh báo học tập sớm** | ✓ | ✓ | ✓ | | |
-| **UC17 - Hệ thống Chat (gộp GV-SV & SV-SV)** | ✓ | ✓ | ✓ | ✓ | ✓ |
-| **UC18 - Diễn đàn khoa** | ✓ | ✓ | ✓ | ✓ | ✓ |
-| **UC19 - Phân tích xu hướng** | ✓ | ✓ | ✓ | | |
-| **UC20 - Bảng xếp hạng & Huy hiệu** | ✓ | ✓ | ✓ | ✓ | ✓ |
-| **UC21 - AJAX auto-refresh** | ✓ | ✓ | ✓ | ✓ | ✓ |
+| **UC17 - Chat Giảng viên - Sinh viên** | ✓ | ✓ | ✓ | ✓ | ✓ |
+| **UC18 - Chat Sinh viên - Sinh viên** | ✓ | | | | ✓ |
+| **UC19 - Phân tích xu hướng** | ✓ | ✓ | | | |
+| **UC20 - Diễn đàn khoa** | ✓ | ✓ | ✓ | ✓ | ✓ |
+| **UC21 - Đánh giá GV** | ✓ | ✓ | | | ✓ |
+| **UC22 - Gamification** | ✓ | ✓ | ✓ | ✓ | ✓ |
+| **UC23 - Portfolio** | ✓ | ✓ | | | ✓ |
+| **UC24 - Study Buddy** | | | | | ✓ |
+| **UC25 - Push Notification** | ✓ | ✓ | ✓ | ✓ | ✓ |
+| **UC26 - QR Code** | ✓ | ✓ | ✓ | | |
 
 ---
 
@@ -880,189 +878,14 @@ CREATE TABLE Diem (
 - Có cơ chế backup dữ liệu định kỳ (mỗi ngày)
 - Có khả năng phục hồi sau sự cố
 
-### 9.5. Yêu cầu công nghệ (CĐ Lạng Sơn - Nhóm 5 SV)
-
-> 💡 **Lưu ý:** Công nghệ sử dụng **chỉ dựa trên những môn đã được học** tại trường: C++, C#, MySQL, Phân tích thiết kế (StarUML), HTML/CSS/JS, Python, PHP.
-
-| Thành phần | Công nghệ | Lý do chọn |
-|------------|-----------|-----------|
-| **Backend** | **Python (Flask)** | Ngôn ngữ chính, cú pháp rõ ràng, dễ debug |
-| **Web Framework** | Flask + Jinja2 Template | Nhẹ, phù hợp đồ án CĐ, không yêu cầu framework phức tạp |
-| **Database** | **MySQL** | Đã học trong môn Hệ quản trị CSDL |
-| **Kết nối DB** | `mysql-connector-python` hoặc `PyMySQL` | Thư viện chuẩn, dễ cài qua pip |
-| **Frontend** | HTML5, CSS3, JavaScript (thuần) | Đã học, không phụ thuộc framework nặng |
-| **CSS Framework** | Bootstrap 5 (qua CDN) | Template đẹp, tiết kiệm thời gian code UI |
-| **Biểu đồ** | Chart.js (qua CDN) | Thư viện JS phổ biến, vẽ biểu đồ đẹp |
-| **Phân tích dữ liệu** | Python: pandas, matplotlib | Làm bài toán "Phân tích xu hướng điểm" → sinh biểu đồ |
-| **Mô hình hóa** | StarUML | Đã học trong môn Phân tích thiết kế hệ thống |
-| **Quản lý phiên bản** | Git + GitHub | Quản lý source code nhóm |
-| **Môi trường chạy** | XAMPP (MySQL) + Python 3.10+ + VS Code | Cài đặt đơn giản, miễn phí |
-
-### 9.6. Cấu trúc dự án Python Flask
-
-```
-QLSV/
-├── app.py                       # File chính, khởi tạo Flask app
-├── config.py                    # Cấu hình (DB connection, secret key)
-├── requirements.txt             # Danh sách thư viện cần cài
-├── README.md                    # Hướng dẫn cài đặt
-│
-├── database/
-│   ├── qlsv.sql                 # Script tạo database
-│   └── seed_data.sql            # Dữ liệu mẫu
-│
-├── models/                      # Tầng xử lý dữ liệu (Database Access Layer)
-│   ├── __init__.py
-│   ├── database.py              # Kết nối MySQL (Singleton)
-│   ├── sinhvien_model.py        # Query cho bảng SinhVien
-│   ├── lop_model.py
-│   ├── monhoc_model.py
-│   ├── diem_model.py
-│   ├── user_model.py
-│   ├── chat_model.py            # Model cho tính năng chat
-│   └── forum_model.py           # Model cho diễn đàn
-│
-├── routes/                      # Tầng xử lý request (Controller)
-│   ├── __init__.py
-│   ├── auth_routes.py           # /login, /logout, /register
-│   ├── sinhvien_routes.py       # /sinhvien, /sinhvien/them, /sinhvien/sua/...
-│   ├── lop_routes.py
-│   ├── diem_routes.py
-│   ├── thongke_routes.py        # /thongke, /bieudo
-│   ├── chat_routes.py           # /chat, /chat/<id>
-│   ├── forum_routes.py          # /forum, /forum/post/<id>
-│   └── api_routes.py            # API JSON cho AJAX (chat, search,...)
-│
-├── templates/                   # Jinja2 templates (HTML)
-│   ├── base.html                # Layout chung
-│   ├── login.html
-│   ├── dashboard.html
-│   ├── sinhvien/
-│   │   ├── danhsach.html
-│   │   ├── them.html
-│   │   └── sua.html
-│   ├── diem/
-│   ├── chat/
-│   └── forum/
-│
-├── static/                      # File tĩnh
-│   ├── css/
-│   │   └── style.css
-│   ├── js/
-│   │   ├── main.js
-│   │   ├── chat.js              # JS cho chat polling
-│   │   └── forum.js
-│   ├── img/
-│   └── uploads/                 # Avatar, file đính kèm
-│
-├── utils/                       # Hàm tiện ích
-│   ├── __init__.py
-│   ├── auth.py                  # Decorator @login_required, @role_required
-│   ├── helpers.py               # Hàm phụ: format date, tính GPA, quy đổi điểm chữ
-│   ├── export_excel.py          # Xuất Excel bằng openpyxl
-│   └── export_pdf.py            # Xuất PDF bằng reportlab
-│
-├── analytics/                   # Phân tích dữ liệu (dùng pandas)
-│   ├── phan_tich_diem.py        # Phân tích xu hướng, cảnh báo sớm
-│   └── generate_chart.py        # Sinh biểu đồ matplotlib
-│
-└── tests/                       # Kiểm thử
-    ├── test_models.py
-    ├── test_routes.py
-    └── test_analytics.py
-```
-
-### 9.7. Thư viện Python cần cài đặt (`requirements.txt`)
-
-```txt
-Flask==3.0.0
-Flask-Login==0.6.3
-PyMySQL==1.1.0
-Werkzeug==3.0.1
-openpyxl==3.1.2          # Xuất Excel
-reportlab==4.0.7         # Xuất PDF
-pandas==2.1.4            # Phân tích dữ liệu
-matplotlib==3.8.2        # Vẽ biểu đồ tĩnh
-python-dotenv==1.0.0
-```
-
-### 9.8. Code mẫu - Kết nối MySQL từ Python
-
-```python
-# models/database.py
-import pymysql
-from contextlib import contextmanager
-
-class Database:
-    _instance = None
-
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-            cls._instance.connection = pymysql.connect(
-                host='localhost',
-                user='root',
-                password='',
-                database='qlsv',
-                charset='utf8mb4',
-                cursorclass=pymysql.cursors.DictCursor
-            )
-        return cls._instance
-
-    @contextmanager
-    def cursor(self):
-        try:
-            with self.connection.cursor() as cur:
-                yield cur
-            self.connection.commit()
-        except Exception as e:
-            self.connection.rollback()
-            raise e
-
-def get_db():
-    return Database()
-```
-
-### 9.9. Code mẫu - Một Route Flask
-
-```python
-# routes/sinhvien_routes.py
-from flask import Blueprint, render_template, request, redirect, url_for
-from models.sinhvien_model import SinhVienModel
-from utils.auth import login_required, role_required
-
-sinhvien_bp = Blueprint('sinhvien', __name__, url_prefix='/sinhvien')
-
-@sinhvien_bp.route('/')
-@login_required
-def danh_sach():
-    """Trang danh sách sinh viên"""
-    keyword = request.args.get('keyword', '')
-    page = int(request.args.get('page', 1))
-    per_page = 20
-
-    model = SinhVienModel()
-    sinh_vien_list, total = model.search(keyword, page, per_page)
-
-    return render_template('sinhvien/danhsach.html',
-                          sinh_vien_list=sinh_vien_list,
-                          total=total,
-                          page=page,
-                          total_pages=(total + per_page - 1) // per_page)
-
-@sinhvien_bp.route('/them', methods=['GET', 'POST'])
-@role_required(['admin', 'giaovu'])
-def them():
-    if request.method == 'POST':
-        data = {
-            'MaSV': request.form['MaSV'],
-            'HoTen': request.form['HoTen'],
-            # ... các trường khác
-        }
-        SinhVienModel().create(data)
-        return redirect(url_for('sinhvien.danh_sach'))
-    return render_template('sinhvien/them.html')
-```
+### 9.5. Yêu cầu công nghệ (đề xuất)
+| Thành phần | Công nghệ |
+|------------|-----------|
+| **Frontend** | HTML, CSS, JavaScript, Bootstrap 5 / Tailwind CSS |
+| **Backend** | PHP (Laravel) / Node.js (Express) / Python (Django) / C# (ASP.NET) |
+| **Database** | MySQL / PostgreSQL / SQL Server |
+| **Báo cáo/Chart** | Chart.js, ReportLab, PHPSpreadsheet |
+| **Deploy** | XAMPP / WAMP / IIS / Docker |
 
 ---
 
@@ -1127,146 +950,114 @@ Dự án **Website Quản lý Sinh viên cho Khoa CNTT** là khả thi và cần
 
 ---
 
-## 11. PHÂN CÔNG NHÓM (5 THÀNH VIÊN - TRƯỜNG CĐ LẠNG SƠN)
+## 11. PHÂN CÔNG NHÓM (5 THÀNH VIÊN)
 
-### 11.1. Thông tin nhóm
-
-| Thông tin | Chi tiết |
-|-----------|----------|
-| **Trường** | Cao đẳng Lạng Sơn |
-| **Khoa** | Công nghệ thông tin |
-| **Số thành viên** | 5 sinh viên |
-| **Môn đã học áp dụng** | C++, C#, MySQL, Phân tích thiết kế (StarUML), HTML/CSS/JS, Python, PHP |
-| **Công nghệ chọn** | **Python (Flask) + MySQL** |
-| **Thời gian** | 8 tuần |
-
-### 11.2. Cơ cấu nhóm (4 vai trò + Trưởng nhóm kiêm)
-
-> 💡 **Đặc thù nhóm:** Trưởng nhóm tự đảm nhiệm việc **kiểm thử chung** (cả nhóm cùng test) và **quản lý dự án**. Do đó 4 thành viên còn lại đảm nhận 4 vai trò kỹ thuật, mỗi người một mảng rõ ràng theo môn đã học.
+### 11.1. Cơ cấu nhóm
 
 | Vai trò | Số người | Mô tả |
 |---------|----------|-------|
-| **Trưởng nhóm + Kiểm thử chung** | 1 (BẠN) | Quản lý dự án, viết báo cáo, tổng hợp test |
-| **Phân tích & Thiết kế hệ thống** | 1 | Vẽ Use Case, Class Diagram, Sequence Diagram trên **StarUML** |
-| **Thiết kế CSDL** | 1 | Vẽ ERD, tạo database, viết script SQL, tạo View/Trigger |
-| **Thiết kế giao diện (UI/UX)** | 1 | Cắt HTML/CSS từ Bootstrap, JavaScript, validate form |
-| **Lập trình Backend (Python)** | 1 | Viết code Flask routes, models, kết nối MySQL, xử lý logic |
+| **Trưởng nhóm (Team Leader)** | 1 | Quản lý, điều phối, tổng hợp |
+| **Thành viên (Developer)** | 3 | Phát triển hệ thống |
+| **Thành viên (UI/UX + Tester)** | 1 | Thiết kế giao diện và kiểm thử |
 
-### 11.3. Phân công chi tiết theo từng vai trò
+### 11.2. Phân công chi tiết
 
-#### 👤 **BẠN (TV0) - TRƯỞNG NHÓM + KIỂM THỬ CHUNG**
+#### 👤 **Thành viên 1 - TRƯỞNG NHÓM / Phân tích & Backend Lead**
 
-| Hạng mục | Chi tiết |
+| Nội dung | Chi tiết |
 |----------|----------|
-| **Tên vai trò** | Team Leader + QA/Tester (tổng hợp) |
-| **Môn đã học liên quan** | MySQL (yếu nhất → học thêm khi cần) |
-| **Công việc chính** | • Quản lý tiến độ, họp nhóm (2 lần/tuần)<br>• **Tổng hợp tài liệu SRS** (dựa trên phân tích của TV1)<br>• Viết **báo cáo cuối kỳ** + slide thuyết trình<br>• **Kiểm thử chung** (cả nhóm cùng test từng chức năng)<br>• Phối hợp với TV2 (CSDL) để học hỏi MySQL<br>• Hỗ trợ TV4 (Backend) code một số chức năng nhỏ (trang login, chỉnh sửa CSS)<br>• Cùng cả nhóm commit lên GitHub |
-| **Đóng góp ước tính** | 20% |
-| **Công nghệ** | Git/GitHub, Markdown, MySQL Workbench (học cơ bản) |
-| **Sản phẩm bàn giao** | SRS tổng hợp, Báo cáo cuối kỳ, Slide thuyết trình, Test report tổng hợp |
+| **Tên vai trò** | Team Leader + Business Analyst + Backend Lead |
+| **Công việc chính** | • Phân tích yêu cầu và viết tài liệu SRS<br>• Thiết kế CSDL (ERD, Schema)<br>• Phát triển Backend Core (Authentication, Authorization)<br>• Xây dựng API quản lý sinh viên, lớp, ngành<br>• Quản lý tiến độ và họp nhóm<br>• Viết báo cáo cuối kỳ |
+| **Đóng góp ước tính** | 30% |
+| **Công nghệ** | PHP/Laravel hoặc Node.js, MySQL, Git |
+| **Sản phẩm bàn giao** | Tài liệu SRS, ERD, Backend Authentication, Module Sinh viên/Lớp |
 
-#### 👤 **TV1 - PHÂN TÍCH & THIẾT KẾ HỆ THỐNG**
+#### 👤 **Thành viên 2 - BACKEND DEVELOPER (Module Điểm & Môn học)**
 
-| Hạng mục | Chi tiết |
+| Nội dung | Chi tiết |
 |----------|----------|
-| **Tên vai trò** | System Analyst - Phân tích & Thiết kế |
-| **Môn đã học liên quan** | **Phân tích thiết kế hệ thống (StarUML)** |
-| **Công việc chính** | • Vẽ **Use Case Diagram** (cho 21 UC) trên StarUML<br>• Vẽ **Class Diagram** cho các thực thể chính<br>• Vẽ **Activity Diagram** cho chức năng quan trọng (nhập điểm, đăng nhập)<br>• Vẽ **Sequence Diagram** cho Hệ thống Chat (UC17), nhập điểm<br>• Phối hợp với TV2 (CSDL) để ERD khớp với Use Case<br>• Viết **đặc tả chi tiết** các Use Case quan trọng (UC01, UC02, UC06, UC16, UC17) |
-| **Đóng góp ước tính** | 20% |
-| **Công nghệ** | **StarUML** (đã học), Word/Markdown để viết đặc tả |
-| **Sản phẩm bàn giao** | File `.mdj` (StarUML): Use Case, Class, Activity, Sequence Diagram |
+| **Tên vai trò** | Backend Developer - Điểm & Môn học |
+| **Công việc chính** | • Phát triển API quản lý môn học<br>• Phát triển API nhập/sửa điểm<br>• Xử lý logic tính GPA, xếp loại<br>• Xây dựng API xuất báo cáo điểm<br>• Tối ưu query database<br>• Viết Unit Test cho backend |
+| **Đóng góp ước tính** | 22% |
+| **Công nghệ** | PHP/Laravel, MySQL, RESTful API |
+| **Sản phẩm bàn giao** | Module Điểm + Môn học hoàn chỉnh, API Documentation |
 
-#### 👤 **TV2 - THIẾT KẾ CƠ SỞ DỮ LIỆU**
+#### 👤 **Thành viên 3 - BACKEND DEVELOPER (Module Người dùng & Phân quyền)**
 
-| Hạng mục | Chi tiết |
+| Nội dung | Chi tiết |
 |----------|----------|
-| **Tên vai trò** | Database Designer |
-| **Môn đã học liên quan** | **Hệ quản trị CSDL (MySQL)** |
-| **Công việc chính** | • Vẽ **ERD** (trên StarUML hoặc MySQL Workbench)<br>• Tạo **database `qlsv`** trên MySQL<br>• Viết script **CREATE TABLE** cho 10+ bảng<br>• Tạo **View** cho thống kê: `vw_diem_trung_binh`, `vw_thong_ke_lop`, ...<br>• Tạo **Stored Procedure** cho tính GPA, xếp loại<br>• Tạo **Trigger** cho cảnh báo học tập sớm (UC16)<br>• Tạo dữ liệu mẫu (seed data) để test<br>• Hỗ trợ TV4 tối ưu query |
-| **Đóng góp ước tính** | 20% |
-| **Công nghệ** | **MySQL Workbench**, command line SQL |
-| **Sản phẩm bàn giao** | File `qlsv.sql` (script tạo DB), file `seed_data.sql` |
+| **Tên vai trò** | Backend Developer - User & Permission |
+| **Công việc chính** | • Phát triển hệ thống Authentication (Login, Logout, Register)<br>• Xây dựng RBAC (Phân quyền theo vai trò)<br>• Quản lý phiên làm việc (Session, Token)<br>• Module Audit Log (ghi log thao tác)<br>• Xử lý bảo mật (mã hóa mật khẩu, CSRF, XSS)<br>• Import dữ liệu từ Excel |
+| **Đóng góp ước tính** | 18% |
+| **Công nghệ** | PHP/Laravel, JWT/Session, Excel Parser |
+| **Sản phẩm bàn giao** | Module Authentication, Phân quyền, Import Excel |
 
-#### 👤 **TV3 - THIẾT KẾ GIAO DIỆN (UI/UX)**
+#### 👤 **Thành viên 4 - FRONTEND DEVELOPER**
 
-| Hạng mục | Chi tiết |
+| Nội dung | Chi tiết |
 |----------|----------|
-| **Tên vai trò** | Frontend Designer |
-| **Môn đã học liên quan** | **HTML, CSS, JavaScript** |
-| **Công việc chính** | • Vẽ **Wireframe** cho các trang (trên giấy hoặc Figma miễn phí)<br>• Cắt **HTML/CSS** từ template Bootstrap 5 (AdminLTE, SB Admin 2)<br>• Xây dựng các trang: Login, Dashboard, CRUD Sinh viên/Lớp/Môn/Điểm, Thống kê<br>• Viết **JavaScript** validate form (email, CCCD, SĐT)<br>• Dùng **Chart.js** cho biểu đồ trên Dashboard<br>• Phối hợp với TV4 để gắn data vào giao diện<br>• **Responsive** trên desktop & tablet |
-| **Đóng góp ước tính** | 20% |
-| **Công nghệ** | HTML5, CSS3, JavaScript, **Bootstrap 5** (qua CDN), **Chart.js** |
-| **Sản phẩm bàn giao** | Toàn bộ file trong `templates/` và `static/` |
+| **Tên vai trò** | Frontend Developer |
+| **Công việc chính** | • Thiết kế giao diện (HTML, CSS, JavaScript)<br>• Xây dựng các trang quản lý (CRUD UI)<br>• Xây dựng trang Dashboard với biểu đồ<br>• Tích hợp Frontend với Backend API<br>• Responsive design (Desktop + Mobile)<br>• Hiệu ứng UX/UI |
+| **Đóng góp ước tính** | 22% |
+| **Công nghệ** | HTML5, CSS3, JavaScript, Bootstrap 5, Chart.js, AJAX/Fetch |
+| **Sản phẩm bàn giao** | Toàn bộ giao diện người dùng, Dashboard |
 
-#### 👤 **TV4 - LẬP TRÌNH BACKEND (Python Flask)**
+#### 👤 **Thành viên 5 - UI/UX DESIGNER + TESTER**
 
-| Hạng mục | Chi tiết |
+| Nội dung | Chi tiết |
 |----------|----------|
-| **Tên vai trò** | Backend Developer (Python) |
-| **Môn đã học liên quan** | **Python** (tham khảo cú pháp C++/C# đã học) |
-| **Công việc chính** | • Viết code **Flask app** (`app.py`), cấu hình routes<br>• Viết các **file model** kết nối MySQL (dùng `pymysql` hoặc `mysql-connector`)<br>• Xử lý **đăng nhập / phân quyền** (Flask-Login)<br>• Viết các **route CRUD**: sinh viên, lớp, ngành, môn học, điểm<br>• Xử lý **logic nghiệp vụ**: công thức điểm, quy đổi điểm chữ, tính GPA<br>• **Xuất Excel** (openpyxl), **xuất PDF** (reportlab)<br>• Viết **API JSON** cho chat (AJAX polling) và diễn đàn<br>• Viết **script Python pandas** cho phân tích xu hướng điểm (UC19)<br>• Làm việc chặt chẽ với TV3 để gắn data |
-| **Đóng góp ước tính** | 25% (cao nhất - phần việc nhiều) |
-| **Công nghệ** | **Python 3.10+**, **Flask**, **PyMySQL**, **pandas**, **openpyxl**, **reportlab** |
-| **Sản phẩm bàn giao** | Toàn bộ file Python: `app.py`, `models/`, `routes/`, `utils/`, `analytics/` |
+| **Tên vai trò** | UI/UX Designer + QA/Tester |
+| **Công việc chính** | • Thiết kế Wireframe & Mockup giao diện<br>• Xây dựng Design System (màu sắc, font, component)<br>• Kiểm thử chức năng (Functional Testing)<br>• Kiểm thử giao diện (UI Testing)<br>• Kiểm thử bảo mật cơ bản<br>• Viết tài liệu hướng dẫn sử dụng<br>• Hỗ trợ Frontend khi cần |
+| **Đóng góp ước tính** | 13% |
+| **Công nghệ** | Figma, Photoshop, TestRail/Excel, Bootstrap |
+| **Sản phẩm bàn giao** | Wireframe, Test Case, Tài liệu hướng dẫn |
 
-### 11.4. Bảng phân công theo Module
+### 11.3. Bảng phân công theo Module
 
-| Module / Chức năng | TV0 (BẠN - Lead+Test) | TV1 (Phân tích) | TV2 (CSDL) | TV3 (UI) | TV4 (Backend) |
-|--------------------|:---:|:---:|:---:|:---:|:---:|
-| Phân tích yêu cầu & SRS | ✅ (Tổng hợp) | ✅ (Use Case) | ⚪ | ⚪ | ⚪ |
-| **Use Case Diagram (StarUML)** | ⚪ | ✅ (Lead) | ⚪ | ⚪ | ⚪ |
-| **Class/Activity/Sequence Diagram** | ⚪ | ✅ (Lead) | ⚪ | ⚪ | ⚪ |
-| **Thiết kế ERD & Database** | ⚪ | ✅ (Phối hợp) | ✅ (Lead) | ⚪ | ⚪ |
-| Script CREATE TABLE, View, Trigger | ⚪ | ⚪ | ✅ (Lead) | ⚪ | ⚪ |
-| Dữ liệu mẫu (seed) | ⚪ | ⚪ | ✅ | ⚪ | ⚪ |
-| Wireframe giao diện | ⚪ | ⚪ | ⚪ | ✅ (Lead) | ⚪ |
-| **Cắt HTML/CSS từ Bootstrap** | ⚪ | ⚪ | ⚪ | ✅ (Lead) | ⚪ |
-| JavaScript validate + AJAX | ⚪ | ⚪ | ⚪ | ✅ | ✅ |
-| **Backend Flask - Auth + Phân quyền** | ⚪ | ⚪ | ⚪ | ⚪ | ✅ (Lead) |
-| **Backend Flask - CRUD Sinh viên/Lớp/Ngành** | ⚪ | ⚪ | ⚪ | ⚪ | ✅ (Lead) |
-| Backend Flask - CRUD Môn học/Điểm | ⚪ | ⚪ | ⚪ | ⚪ | ✅ (Lead) |
-| Thống kê + Biểu đồ Chart.js | ⚪ | ⚪ | ⚪ | ✅ (Chart UI) | ✅ (Logic) |
-| Import/Export Excel/PDF | ⚪ | ⚪ | ⚪ | ⚪ | ✅ (Lead) |
-| **🚀 Cảnh báo học tập sớm (UC16)** | ⚪ | ⚪ | ✅ (Trigger) | ⚪ | ✅ (Hiển thị) |
-| **🚀 Hệ thống Chat (UC17)** — gộp GV-SV & SV-SV | ⚪ | ✅ (Sequence) | ✅ (Schema) | ✅ (UI) | ✅ (API) |
-| **🚀 Diễn đàn khoa (UC18)** | ⚪ | ✅ (Sequence) | ✅ (Schema) | ✅ (UI) | ✅ (API) |
-| **🚀 Phân tích xu hướng điểm (UC19)** | ⚪ | ⚪ | ⚪ | ✅ (Hiển thị ảnh) | ✅ (pandas) |
-| **🚀 Bảng xếp hạng & Huy hiệu (UC20)** | ⚪ | ⚪ | ⚪ | ✅ (UI) | ✅ (Logic) |
-| **🚀 AJAX auto-refresh (UC21)** | ⚪ | ⚪ | ⚪ | ✅ (JS) | ✅ (API endpoint) |
-| **Kiểm thử (cả nhóm cùng làm)** | ✅ (Tổng hợp) | ✅ | ✅ | ✅ | ✅ |
-| Viết báo cáo + Slide | ✅ (Lead) | ⚪ | ⚪ | ⚪ | ⚪ |
-| Tài liệu hướng dẫn sử dụng | ✅ | ⚪ | ⚪ | ✅ | ⚪ |
+| Module / Chức năng | TV1 (Lead) | TV2 | TV3 | TV4 | TV5 |
+|--------------------|:----------:|:---:|:---:|:---:|:---:|
+| Phân tích yêu cầu & SRS | ✅ (Lead) | ⚪ | ⚪ | ⚪ | ⚪ |
+| Thiết kế CSDL | ✅ (Lead) | ⚪ | ⚪ | ⚪ | ⚪ |
+| Authentication | ✅ | ⚪ | ✅ | ⚪ | ⚪ |
+| Phân quyền (RBAC) | ⚪ | ⚪ | ✅ | ⚪ | ⚪ |
+| Quản lý Sinh viên | ✅ | ⚪ | ⚪ | ✅ | ⚪ |
+| Quản lý Lớp/Ngành | ✅ | ⚪ | ⚪ | ✅ | ⚪ |
+| Quản lý Môn học | ⚪ | ✅ | ⚪ | ✅ | ⚪ |
+| Quản lý Điểm | ⚪ | ✅ | ⚪ | ✅ | ⚪ |
+| Import/Export Excel | ⚪ | ⚪ | ✅ | ✅ | ⚪ |
+| Xuất PDF/Word | ⚪ | ✅ | ⚪ | ✅ | ⚪ |
+| Dashboard & Biểu đồ | ⚪ | ⚪ | ⚪ | ✅ | ✅ |
+| Giao diện CRUD | ⚪ | ⚪ | ⚪ | ✅ | ✅ |
+| Audit Log | ⚪ | ⚪ | ✅ | ⚪ | ⚪ |
+| **🚀 Cảnh báo học tập sớm (UC16)** | ⚪ | ✅ | ⚪ | ✅ | ⚪ |
+| **🚀 Chat Giảng viên - Sinh viên (UC17)** | ⚪ | ✅ | ✅ | ✅ | ⚪ |
+| **🚀 Chat Sinh viên - Sinh viên (UC18)** | ⚪ | ✅ | ✅ | ✅ | ⚪ |
+| **🚀 Phân tích xu hướng (UC19)** | ⚪ | ✅ | ⚪ | ✅ | ⚪ |
+| **🚀 Diễn đàn khoa (UC20)** | ⚪ | ⚪ | ✅ | ✅ | ⚪ |
+| **🚀 Đánh giá GV (UC21)** | ⚪ | ✅ | ⚪ | ✅ | ⚪ |
+| **🚀 Gamification (UC22)** | ⚪ | ⚪ | ⚪ | ✅ | ✅ |
+| **🚀 Portfolio sinh viên (UC23)** | ⚪ | ⚪ | ✅ | ✅ | ⚪ |
+| **🚀 PWA + Real-time (UC25)** | ⚪ | ✅ | ✅ | ✅ | ⚪ |
+| Kiểm thử | ⚪ | ⚪ | ⚪ | ⚪ | ✅ (Lead) |
+| Viết báo cáo | ✅ | ⚪ | ⚪ | ⚪ | ✅ |
+| Tài liệu hướng dẫn | ✅ | ⚪ | ⚪ | ⚪ | ✅ |
 
-> 💡 **Ghi chú quan trọng:**
-> - Các tính năng sáng tạo (🚀) phát triển ở mức **MVP** — đủ chạy, demo được
-> - **Mọi thành viên đều tham gia kiểm thử** khi tích hợp xong
-> - Bạn (Lead) chịu trách nhiệm **tổng hợp test report** cuối cùng
+> 💡 **Lưu ý:** Các tính năng sáng tạo (có đánh dấu 🚀) sẽ được phát triển ở mức **MVP (Minimum Viable Product)** — tức là làm đủ chạy, demo được, không cần quá phức tạp. Mục đích chính là **thể hiện tư duy sáng tạo và áp dụng công nghệ mới**, không phải sản phẩm thương mại.
 
-### 11.5. Quy trình làm việc nhóm
+### 11.4. Quy trình làm việc nhóm
 
 **Công cụ quản lý:**
-- 📋 **Git + GitHub** - Quản lý source code (1 repo chung, mỗi người 1 branch)
-- 📋 **Trello** (miễn phí) - Quản lý task theo Kanban
-- 📋 **Zalo/Nhóm chat** - Giao tiếp hàng ngày
-- 📋 **Google Drive** - Chia sẻ tài liệu SRS, báo cáo
+- 📋 **Git + GitHub/GitLab** - Quản lý source code
+- 📋 **Trello/Jira** - Quản lý task
+- 📋 **Slack/Discord/Zalo** - Giao tiếp nhóm
+- 📋 **Google Drive** - Chia sẻ tài liệu
 
 **Quy tắc:**
-- Họp nhóm **2 lần/tuần** (ví dụ: Tối thứ 3 & thứ 6)
-- Mỗi thành viên **commit code ít nhất 3 lần/tuần**
-- **Code review** trước khi merge vào nhánh `main`
-- Sử dụng **Git Flow** đơn giản: `main` → `develop` → `feature/<ten-tinh-nang>`
-
-### 11.6. Lộ trình học thêm cho BẠN (vì tự nhận yếu MySQL)
-
-| Tuần | Kiến thức cần học thêm | Tài liệu tham gia |
-|------|------------------------|--------------------|
-| Tuần 1 | Cú pháp SQL cơ bản: SELECT, INSERT, UPDATE, DELETE | W3Schools SQL, MySQL Tutorial |
-| Tuần 2 | JOIN, GROUP BY, ORDER BY, LIMIT | MySQL Tutorial |
-| Tuần 3 | View, Trigger, Stored Procedure (cơ bản) | MySQL Documentation |
-| Tuần 4 | Cú pháp Python cơ bản (nếu cần hỗ trợ TV4) | W3Schools Python |
-| Tuần 5-8 | Áp dụng thực tế khi làm dự án | - |
-
-> 💡 **Khuyến nghị:** Bạn chỉ cần học SQL đủ để **đọc hiểu** và **viết được query đơn giản** là OK. TV2 (CSDL) sẽ phụ trách chính viết script SQL, bạn chỉ cần đọc hiểu khi review.
+- Họp nhóm 2 lần/tuần (Thứ 3 & Thứ 6)
+- Daily standup 15 phút qua chat
+- Mỗi thành viên commit code ít nhất 3 lần/tuần
+- Code review bắt buộc trước khi merge
+- Sử dụng Git Flow (main, develop, feature branches)
 
 ---
 
@@ -1282,18 +1073,18 @@ Tuần 7:    ░░░░░░▓░░░  Tích hợp & Kiểm thử
 Tuần 8:    ░░░░░░░░▓░  Triển khai & Báo cáo
 ```
 
-### 12.2. Chi tiết theo tuần (Python Flask + 5 SV CĐ Lạng Sơn)
+### 12.2. Chi tiết theo tuần
 
 | Tuần | Hoạt động | Thành viên phụ trách |
 |------|-----------|----------------------|
-| **1** | Phân tích yêu cầu, viết SRS, vẽ Use Case Diagram trên StarUML | BẠN + TV1 (Lead) |
-| **2** | Vẽ Class/Activity/Sequence Diagram, ERD, Wireframe, setup môi trường (Python + Flask + MySQL) | TV1 (Lead) + TV2 + TV3 + BẠN |
-| **3** | Tạo database MySQL, viết script SQL, tạo View/Trigger. Cắt HTML/CSS từ Bootstrap | TV2 (Lead) + TV3 |
-| **4** | Backend Flask - Module Auth + CRUD Sinh viên/Lớp/Ngành/Môn | TV4 (Lead) + BẠN (hỗ trợ) |
-| **5** | Backend Flask - CRUD Điểm + Thống kê + Xuất Excel/PDF | TV4 (Lead) + TV2 (hỗ trợ query) |
-| **6** | Tích hợp Frontend-Backend, làm Dashboard với Chart.js, làm các tính năng sáng tạo (chat SV-SV, diễn đàn, bảng xếp hạng) | TV3 + TV4 + TV2 (Trigger) |
-| **7** | **Tích hợp + Kiểm thử (cả nhóm cùng test)** + sửa lỗi | BẠN (Lead) + Cả nhóm |
-| **8** | Triển khai demo + viết báo cáo + làm slide + thuyết trình | BẠN (Lead) + Cả nhóm |
+| **1** | Phân tích yêu cầu, viết SRS, thiết kế ERD | TV1 (Lead) + Cả nhóm |
+| **2** | Thiết kế UI/Wireframe, Setup môi trường dev | TV5 (Lead) + TV4 |
+| **3** | Backend Core + Auth + Module Sinh viên/Lớp | TV1, TV3 |
+| **4** | Backend Module Điểm + Môn học + Import/Export | TV2, TV3 |
+| **5** | Frontend các trang CRUD + Login | TV4 |
+| **6** | Frontend Dashboard + Biểu đồ | TV4, TV5 |
+| **7** | Tích hợp + Kiểm thử + Sửa lỗi | TV5 (Lead) + Cả nhóm |
+| **8** | Triển khai demo + Viết báo cáo + Thuyết trình | TV1 (Lead) + Cả nhóm |
 
 ### 12.3. Milestone quan trọng
 
@@ -1334,14 +1125,10 @@ Tuần 8:    ░░░░░░░░▓░  Triển khai & Báo cáo
 
 ## XÁC NHẬN
 
-| # | Vai trò | Họ tên | Ký tên | Ngày |
-|---|---------|--------|--------|------|
-| 1 | **Trưởng nhóm + Kiểm thử** (BẠN) | | | |
-| 2 | Phân tích & Thiết kế hệ thống (StarUML) | | | |
-| 3 | Thiết kế Cơ sở dữ liệu (MySQL) | | | |
-| 4 | Thiết kế Giao diện (UI/UX) | | | |
-| 5 | Lập trình Backend (Python Flask) | | | |
-| | **GV hướng dẫn** | | | |
+| Vai trò | Họ tên | Ký tên | Ngày |
+|---------|--------|--------|------|
+| Trưởng nhóm | | | |
+| GV hướng dẫn | | | |
 
 ---
 
