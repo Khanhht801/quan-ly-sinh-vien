@@ -213,20 +213,6 @@ h6 {
     font-weight: 700;
 }
 
-.demo-account {
-    padding: var(--space-4);
-    border-left: 3px solid var(--color-info);
-    border-radius: var(--radius-sm);
-    background: var(--color-neutral);
-    color: var(--color-text-muted);
-    font-size: 0.875rem;
-}
-
-.demo-account strong,
-.demo-account b {
-    color: var(--color-text);
-}
-
 /* Application shell */
 
 .sidebar {
