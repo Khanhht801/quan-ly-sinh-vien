@@ -172,7 +172,6 @@ Thay `ten-nhanh`, `ten-file` và `URL` bằng tên nhánh, đường dẫn file 
 | `git push` | Đẩy commit mới của nhánh đã có liên kết |
 | `git merge origin/develop` | Ghép develop đã fetch vào nhánh riêng đang làm |
 | `git merge --abort` | Hủy lần merge đang có conflict |
-| `git log --oneline -5` | Xem 5 commit gần nhất |
 | `git remote -v` | Xem địa chỉ repo remote để lấy và gửi code |
 
 PR, review và merge PR thực hiện trên trang GitHub như các bước ở trên; không cần cài thêm công cụ dòng lệnh.
