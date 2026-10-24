@@ -34,7 +34,7 @@ Thành viên 1 chủ trì, cả nhóm cùng quyết định và ghi lại kết 
 - Xác nhận stack, cách chạy dự án, cách chia nhánh và người review.
 - Giao người chuẩn bị công thức điểm, cách làm tròn, xử lý thiếu điểm, ngưỡng xếp loại và đồng hạng. Các quy tắc này phải được chốt trước khi triển khai tính điểm.
 
-Ví dụ: nếu mã sinh viên được đặt là `student_code`, người làm form và người xử lý Python phải thống nhất cách gửi/nhận trường đó. Đây là ví dụ tên gọi, chưa phải schema chính thức.
+Tên mã sinh viên dùng thống nhất là `student_code` trong form, Python và database. Các tên và giao ước cụ thể ở mục 11 là chuẩn triển khai của kế hoạch này.
 
 **Kết quả buổi họp:** có người nhận từng task, phác thảo giao diện, dữ liệu ban đầu và các quyết định còn chờ chốt. Không cần hoàn thiện mọi chi tiết giao diện mới bắt đầu làm.
 
@@ -117,13 +117,13 @@ Mũi tên thể hiện đầu vào cần để hoàn thiện phần sau. Trong l
 
 ## 5. Cách nối giao diện với backend
 
-Trước khi viết một chức năng, người frontend và backend thống nhất những nội dung sau. Ví dụ minh họa cho thêm sinh viên:
+Người frontend và backend dùng giao ước sau cho chức năng thêm sinh viên; các route còn lại ở mục 11.
 
 | Nội dung | Thỏa thuận cần có |
 |---|---|
-| Mở form | Đường dẫn và template hiển thị form |
-| Gửi form | Ví dụ `POST /students/create`; nhóm chốt đường dẫn thực tế trước khi code |
-| Dữ liệu gửi | Tên trường, kiểu dữ liệu, trường bắt buộc và giá trị lớp |
+| Mở form | `GET /students/create`, template `students/create.html` |
+| Gửi form | `POST /students/create` |
+| Dữ liệu gửi | Các trường trong bảng sinh viên ở mục 11.2, kèm `csrf_token` |
 | Quyền | Backend chỉ cho giáo viên thực hiện; ẩn nút trên giao diện chưa đủ |
 | Nhập sai | Trả thông báo rõ ràng, giữ dữ liệu phù hợp để sửa |
 | Thành công | Quay về danh sách, hiện thông báo và thấy sinh viên mới |
@@ -200,3 +200,123 @@ Mỗi bạn cập nhật ngắn: đã xong gì, đang làm gì, đang chờ ai v
 - TV5 chuẩn bị kịch bản và tài liệu; TV1 chủ trì tích hợp, cả nhóm kiểm tra phần mình trước buổi trình bày.
 
 Mốc bắt đầu nên được ưu tiên là: **cả nhóm chạy được cùng dự án và hoàn thành đăng nhập → xem danh sách → thêm sinh viên**. Dùng các mốc trên để theo dõi tiến độ đến hạn 01/12/2026; nhóm tự gán ngày và người nhận theo thời gian thực tế.
+
+## 11. Tên gọi và giao ước dùng chung
+
+Phần này chốt tên kỹ thuật và cách bàn giao theo yêu cầu thống nhất. Đây là quy ước cho mã sẽ viết, chưa tạo bảng hoặc thay đổi mã nguồn thực tế. Tên thật của năm thành viên chưa có nên tiếp tục dùng TV1–TV5; không tự gán tên người.
+
+### 11.1. Tên module và vai trò
+
+| Nghiệp vụ | Tên dùng trong code/URL | Backend | Giao diện |
+|---|---|---|---|
+| Xác thực | `auth` | TV1 | TV4 |
+| Tài khoản cá nhân | `account` | TV1 | TV4, TV5 dùng lại |
+| Lớp | `classes` | TV2 | TV4 |
+| Sinh viên | `students` | TV2 | TV4 quản lý, TV5 xem cá nhân |
+| Giáo viên | `teachers` | TV2 | TV4 |
+| Môn học | `subjects` | TV3 | TV4 |
+| Phân công giảng dạy | `teaching_assignments` trong Python/SQL, `teaching-assignments` trong URL | TV3 | TV4 |
+| Điểm | `grades` | TV3 | TV4 nhập, TV5 xem |
+| Kết quả và báo cáo | `reports` | TV3 | TV4 cho giáo viên, TV5 cho sinh viên |
+
+Vai trò lưu trong code/database là `teacher` và `student`; giao diện hiển thị “Giáo viên” và “Sinh viên”. Không thêm vai trò quản trị ngoài đặc tả. Không dùng xen kẽ `pupils` với `students`, `courses` với `subjects` hoặc `scores` với `grades` để gọi cùng module.
+
+### 11.2. Trường dữ liệu và form
+
+Python, SQL và thuộc tính HTML `name` dùng `snake_case`. JavaScript dùng biến `camelCase`, ví dụ biến `studentCode` đọc từ trường `student_code`. Khóa nội bộ dùng số nguyên; mã nghiệp vụ dùng chuỗi, không lấy mã nghiệp vụ làm số để tránh mất số 0 đầu.
+
+| Bảng | Khóa chính | Trường thống nhất |
+|---|---|---|
+| `classes` | `class_id` | `class_code`, `class_name`, `major_name` |
+| `students` | `student_id` | `student_code`, `full_name`, `date_of_birth`, `gender`, `phone_number`, `email`, `class_id` |
+| `teachers` | `teacher_id` | `teacher_code`, `full_name`, `email` |
+| `semesters` | `semester_id` | `semester_code`, `semester_name`, `academic_year`, `start_date`, `end_date` |
+| `subjects` | `subject_id` | `subject_code`, `subject_name`, `credits` |
+| `teaching_assignments` | `assignment_id` | `teacher_id`, `subject_id`, `class_id`, `semester_id` |
+| `grades` | `grade_id` | `student_id`, `assignment_id`, `continuous_score`, `exam_score`, `final_score`, `updated_by_user_id`, `updated_at` |
+| `users` | `user_id` | `username`, `password_hash`, `role`, `is_active`, `student_id`, `teacher_id` |
+| `audit_logs` | `audit_log_id` | `actor_user_id`, `action`, `entity_type`, `entity_id`, `created_at` |
+
+- Mã lớp, sinh viên, giáo viên, học kỳ, môn học và `username` phải duy nhất trong bảng tương ứng.
+- Mỗi tài khoản liên kết đúng một hồ sơ phù hợp vai trò: `student_id` hoặc `teacher_id`; một hồ sơ không có nhiều tài khoản. TV1 kiểm soát ràng buộc này khi tạo schema và cấp tài khoản.
+- Một phân công xác định một lớp–môn–học kỳ và giáo viên phụ trách. Trong phạm vi đề tài, bộ `class_id`, `subject_id`, `semester_id` là duy nhất. Điểm duy nhất theo cặp `student_id`, `assignment_id`; backend kiểm tra sinh viên thuộc lớp của phân công.
+- Mã lớp nghiệp vụ là `K10TIN`; không mặc định `class_id = 1` vì khóa nội bộ có thể khác giữa các máy.
+- Form sinh viên bắt buộc: `student_code`, `full_name`, `date_of_birth`, `gender`, `class_id`. `phone_number`, `email` có thể để trống; nếu nhập phải hợp lệ. `gender` nhận `male`, `female`, `other`, hiển thị lần lượt Nam, Nữ, Khác.
+- Ngày gửi dạng `YYYY-MM-DD`, ngày sinh không ở tương lai. Số điện thoại là chuỗi. Chuỗi nhập được bỏ khoảng trắng đầu/cuối; mã nghiệp vụ chuẩn hóa chữ hoa, email chuẩn hóa chữ thường.
+- Form đăng nhập gửi `username`, `password`, `csrf_token`; không tự cắt khoảng trắng trong mật khẩu. Form đổi mật khẩu gửi `current_password`, `new_password`, `confirm_password`, `csrf_token`.
+- `password_hash`, vai trò, người cập nhật và thời gian cập nhật do backend quản lý. Form không được tự quyết định quyền hoặc danh tính người thao tác.
+- Trường điểm nhận số hoặc giá trị chưa nhập; thiếu điểm không tự chuyển thành 0. `final_score` và kết quả học kỳ do backend tính; thang điểm, tỷ lệ và ngưỡng xếp loại cần xác nhận theo mục 11.6.
+- Kết quả tổng hợp truyền sang template dùng tên `semester_average`, `classification`, `class_rank`, `student_count`. Chưa tạo bảng kết quả riêng khi có thể tính từ điểm.
+
+### 11.3. Route và màn hình
+
+Các đường dẫn dưới đây là route Flask render HTML, không mang tiền tố `/api`. Mọi POST thay đổi dữ liệu phải kiểm tra CSRF và quyền ở backend.
+
+| Method và URL | Chức năng | Quyền | Backend / giao diện |
+|---|---|---|---|
+| `GET, POST /login` | Mở form / xử lý đăng nhập | Chưa đăng nhập | TV1 / TV4 |
+| `POST /logout` | Đăng xuất | Đã đăng nhập | TV1 / TV4 |
+| `GET /account` | Xem tài khoản của mình | Đã đăng nhập | TV1 / TV4 |
+| `GET, POST /account/change-password` | Mở form / đổi mật khẩu | Đã đăng nhập | TV1 / TV4 |
+| `GET /students` | Danh sách, tìm bằng `q` | Giáo viên | TV2 / TV4 |
+| `GET, POST /students/create` | Mở form / thêm sinh viên | Giáo viên | TV2 / TV4 |
+| `GET /students/<int:student_id>` | Xem chi tiết sinh viên | Giáo viên | TV2 / TV4 |
+| `GET, POST /students/<int:student_id>/edit` | Mở form / sửa sinh viên | Giáo viên | TV2 / TV4 |
+| `POST /students/<int:student_id>/delete` | Xóa sau xác nhận | Giáo viên | TV2 / TV4 |
+| `GET /classes`, `GET /teachers`, `GET /subjects` | Danh sách và tìm kiếm bằng `q` | Giáo viên | TV2 cho lớp/GV, TV3 cho môn / TV4 |
+| `GET /teaching-assignments` | Danh sách phân công | Giáo viên | TV3 / TV4 |
+| `GET, POST /grades/<int:assignment_id>/edit` | Xem bảng / lưu điểm | Giáo viên được phân công | TV3 / TV4 |
+| `GET /reports` | Thống kê học kỳ | Giáo viên | TV3 / TV4 |
+| `GET /me/profile` | Hồ sơ sinh viên đang đăng nhập | Sinh viên | TV2 / TV5 |
+| `GET /me/grades` | Điểm và kết quả của sinh viên đang đăng nhập | Sinh viên | TV3 / TV5 |
+
+Các module `classes`, `teachers`, `subjects`, `teaching-assignments` dùng cùng mẫu CRUD: `GET, POST /<module>/create`, `GET /<module>/<int:id>`, `GET, POST /<module>/<int:id>/edit`, `POST /<module>/<int:id>/delete`. Trong code thay `id` bằng `class_id`, `teacher_id`, `subject_id`, `assignment_id` tương ứng. Môn đã có phân công hoặc dữ liệu liên quan không được xóa gây mất liên kết; backend trả lỗi nghiệp vụ rõ ràng.
+
+Danh sách phân công có bộ lọc `mine=1` để giáo viên xem môn mình phụ trách; backend lấy giáo viên từ tài khoản đang đăng nhập. Báo cáo và trang điểm dùng `semester_id` để chọn học kỳ, backend xác minh học kỳ hợp lệ. Sinh viên xem thứ hạng của mình, không được trả kèm hồ sơ hoặc bảng điểm của người khác.
+
+Sau đăng nhập: giáo viên chuyển đến `/students`, sinh viên chuyển đến `/me/grades`. Trang `/me/*` lấy `student_id` từ tài khoản, không nhận mã sinh viên do trình duyệt gửi để chọn người cần xem.
+
+### 11.4. Tên file và cách bàn giao template
+
+Tên template tương đối với thư mục template chung:
+
+| Template | Người chính | Dữ liệu backend truyền |
+|---|---|---|
+| `base.html` | TV4 | `current_user`, thông báo chung |
+| `auth/login.html` | TV4 | `form_values`, `errors` |
+| `account/detail.html`, `account/change-password.html` | TV4 | `current_user`, `form_values`, `errors` khi có form |
+| `students/list.html` | TV4 | `students`, `q` |
+| `students/create.html`, `students/edit.html` | TV4 | `form_values`, `errors`, `classes` |
+| `students/detail.html` | TV4 | `student` |
+| `grades/edit.html` | TV4 | `assignment`, `grade_rows`, `errors` |
+| `reports/overview.html` | TV4 | `semester`, dữ liệu thống kê của TV3 |
+| `me/profile.html` | TV5 | `student` |
+| `me/grades.html` | TV5 | `grade_rows`, `semester_average`, `classification`, `class_rank` |
+
+Module lớp, giáo viên, môn và phân công dùng cùng mẫu `<module>/list.html`, `create.html`, `edit.html`, `detail.html`; thư mục template phân công là `teaching-assignments`. TV4 sở hữu layout/component chung; TV5 dùng lại và trao đổi trước khi sửa chúng.
+
+`form_values` là bộ giá trị để điền lại form; `errors` ánh xạ tên trường sang thông báo tiếng Việt, lỗi chung dùng khóa `form`. Không truyền mật khẩu hoặc hash vào giá trị điền lại. Các dòng `grade_rows` dùng khóa `student_id`, `student_code`, `full_name`, `subject_name`, `continuous_score`, `exam_score`, `final_score` khi phù hợp màn hình; dữ liệu chưa có hiển thị “Chưa có điểm”.
+
+File web dùng `kebab-case`, ví dụ `student-form.js`, `student-form.css`; module Python dùng `snake_case`, ví dụ `teaching_assignments.py`. Chỉ tạo file khi cần thực tế. Vị trí thư mục backend/template được xác định lúc dựng Flask theo convention chung; không di chuyển homepage hoặc tạo hàng loạt thư mục trước bước đó.
+
+### 11.5. Phản hồi và nhánh làm việc
+
+- Chưa đăng nhập: chuyển đến `/login`. Đã đăng nhập nhưng sai quyền: trả trang lỗi HTTP 403. Đối tượng không tồn tại: HTTP 404.
+- Form sai dữ liệu: render lại form với HTTP 400, `errors` và `form_values`. Lỗi CSRF trả HTTP 400. Đăng nhập sai dùng thông báo chung “Tên đăng nhập hoặc mật khẩu không đúng”.
+- POST thành công: chuyển hướng HTTP 303 đến trang kết quả để tải lại trang không gửi form lần nữa; hiển thị thông báo thành công.
+- Thông báo dùng các loại `success`, `error`, `info`; giao diện dịch nội dung sang tiếng Việt và escape dữ liệu khi render.
+- Task dùng mã `START-01`…`START-10` như mục 6; nhánh theo mẫu `feature/start-06-student-backend`. Một task có một người chịu trách nhiệm chính, người review theo bảng; không đặt nhánh chỉ theo tên thành viên.
+- Nhật ký dùng `action` là `create`, `update`, `delete`, `change_password`; `entity_type` theo tên bảng. Không ghi mật khẩu, hash hoặc secret vào nhật ký.
+
+### 11.6. Phần cần quyết định nghiệp vụ trước khi viết tính điểm
+
+Tên kỹ thuật và đường dẫn ở trên đã được thống nhất trong kế hoạch. Các thông số sau chưa có trong đặc tả, nên TV3 chuẩn bị đề xuất và TV1 cùng nhóm xác nhận trước khi triển khai:
+
+| Cần quyết định | Kết quả phải ghi lại |
+|---|---|
+| Thang điểm và công thức môn | Khoảng điểm hợp lệ, trọng số thường xuyên/thi, số đầu điểm |
+| Làm tròn | Số chữ số, thời điểm làm tròn và ví dụ |
+| Điểm trung bình học kỳ | Công thức theo tín chỉ/hệ số, cách xử lý môn thiếu điểm |
+| Xếp loại và thứ hạng | Ngưỡng từng loại, cách xử lý đồng hạng và kết quả chưa đủ điểm |
+
+Không tự gán các giá trị như 30%/70% hay ngưỡng Giỏi khi đặc tả chưa quy định. Những phần này không cản trở việc bắt đầu đăng nhập, danh sách và thêm sinh viên theo giao ước đã chốt.
