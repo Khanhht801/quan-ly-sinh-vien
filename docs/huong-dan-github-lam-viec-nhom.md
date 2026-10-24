@@ -21,6 +21,12 @@
 
 Mỗi người cần có tài khoản GitHub và cài [Git](https://git-scm.com/downloads). Các lệnh chạy trong terminal của VS Code.
 
+```bash
+git --version  # Kiểm tra Git đã được cài và dùng được chưa.
+```
+
+Nếu hiện `git version ...` là dùng được; nếu không nhận lệnh, cài Git hoặc kiểm tra PATH rồi mở lại VS Code.
+
 ### Bước 1 — Nhóm trưởng tạo repo
 
 Trên GitHub: **New repository** → đặt tên → tích tạo **README.md** → **Create repository**.
