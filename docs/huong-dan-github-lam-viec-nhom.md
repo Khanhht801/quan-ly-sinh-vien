@@ -57,10 +57,10 @@ git status                              # Xem nhánh hiện tại và file đang
 git fetch origin                        # Lấy thông tin mới từ GitHub, chưa đổi file ở máy.
 git switch develop                      # Chuyển sang nhánh develop ở máy.
 git pull --ff-only origin develop        # Cập nhật develop ở máy bằng bản mới nhất trên GitHub.
-git switch -c docs/gioi-thieu-an         # Tạo nhánh riêng từ develop rồi chuyển sang đó.
+git switch -c feature/gioi-thieu-an      # Tạo nhánh riêng từ develop rồi chuyển sang đó.
 ```
 
-Tiếp tục nhánh cũ thì dùng `git switch docs/gioi-thieu-an`, không thêm `-c`.
+Tiếp tục nhánh cũ thì dùng `git switch feature/gioi-thieu-an`, không thêm `-c`.
 
 Nếu chưa có `develop` hoặc pull bị từ chối, nhờ trưởng nhóm kiểm tra, không dùng force.
 
@@ -82,14 +82,14 @@ Message phải rõ việc đã làm, tránh `update`, `fix`, `xong`.
 ### Bước 3: Push và mở PR
 
 ```bash
-git push -u origin docs/gioi-thieu-an
+git push -u origin feature/gioi-thieu-an
 ```
 
 Lần đầu dùng `-u`; lần sau trên nhánh này chỉ cần `git push`.
 
 Trên GitHub, vào **Pull requests → New pull request**:
 
-1. Chọn **base: develop**, **compare: docs/gioi-thieu-an**.
+1. Chọn **base: develop**, **compare: feature/gioi-thieu-an**.
 2. Ghi đã sửa gì, mục đích và đã kiểm tra gì.
 3. Nhờ một bạn xem **Files changed** và review.
 4. Có góp ý thì sửa trên nhánh cũ, add, commit rồi push; PR tự cập nhật.
