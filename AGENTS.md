@@ -158,7 +158,19 @@ quanLySinhVien/
 4. Tìm cách tái sử dụng component, hàm và pattern hiện có trước khi tạo mới.
 5. Thực hiện thay đổi theo từng nhóm logic; không trộn refactor lớn với sửa lỗi/tính năng nếu không cần thiết.
 6. Chạy kiểm tra phù hợp, xem lại diff và xác nhận không có secret, code debug hoặc file rác.
-7. Báo cáo ngắn gọn: đã đổi gì, file nào, đã kiểm tra gì và còn rủi ro/hạn chế nào.
+7. Commit sau mỗi hành động sửa dự án đã hoàn tất và được kiểm tra theo quy tắc bên dưới.
+8. Báo cáo ngắn gọn: đã đổi gì, file nào, đã kiểm tra gì, mã commit và còn rủi ro/hạn chế nào.
+
+### Quy tắc commit sau mỗi hành động sửa dự án
+
+- Sau mỗi hành động sửa dự án (thêm, sửa, xóa hoặc đổi tên file), agent phải tạo một commit ngay khi thay đổi đó hoàn chỉnh và đã được kiểm tra phù hợp, trước khi chuyển sang hành động độc lập tiếp theo hoặc kết thúc công việc. Các chỉnh sửa phụ thuộc nhau để hoàn thành cùng một hành vi được tính là một hành động và phải nằm trong cùng commit.
+- Yêu cầu này cho phép agent tự thực hiện commit cục bộ, không cần hỏi lại; nếu người dùng yêu cầu không commit trong một nhiệm vụ cụ thể thì ưu tiên yêu cầu đó.
+- Trước khi commit, xem `git status`, kiểm tra diff và chạy các kiểm tra liên quan. Chỉ stage rõ từng file hoặc phần thay đổi thuộc hành động vừa thực hiện; không dùng `git add .` hoặc gom thay đổi có sẵn của người dùng vào commit.
+- Mỗi commit chỉ có một mục đích. Thông điệp dùng dạng `<type>(<scope>): <mô tả ngắn>`, với type như `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`; ví dụ: `docs(agent): bổ sung quy tắc commit sau mỗi thay đổi`.
+- Message commit phải rõ ràng, mô tả cụ thể đã thay đổi gì và mục đích hoặc lỗi được xử lý. Không dùng thông điệp chung chung như `update`, `fix`, `sửa code` hoặc `hoàn thành`. Ví dụ phù hợp: `fix(grades): chặn nhập điểm ngoài khoảng 0–10`. Nếu cần giải thích thêm lý do hoặc ảnh hưởng, viết trong phần body, cách tiêu đề một dòng trống.
+- Không tạo commit rỗng, không commit secrets hoặc artifact tạm, không bỏ qua hook kiểm tra. Nếu kiểm tra hoặc commit thất bại, xử lý lỗi trong phạm vi cho phép; nếu không thể tiếp tục, báo rõ lý do và phần thay đổi chưa commit.
+- Không tự amend, reset hoặc ghi lại lịch sử commit; chỉ push khi người dùng yêu cầu.
+- Sau khi commit, kiểm tra lại trạng thái repository và báo mã commit cùng kết quả kiểm tra. Những thay đổi có sẵn ngoài phạm vi phải được giữ nguyên.
 
 Agent phải hỏi lại trước khi:
 
@@ -174,6 +186,7 @@ Một công việc chỉ được coi là hoàn thành khi:
 - Hành vi đáp ứng yêu cầu và không phá luồng hiện có liên quan.
 - File nằm đúng thư mục, tên rõ nghĩa, không có bản sao hoặc artifact thừa.
 - Code đã được format/lint theo cấu hình dự án và các test liên quan đã chạy thành công.
+- Mỗi hành động sửa dự án đã hoàn tất phải có commit cục bộ theo quy tắc ở mục 7, trừ khi người dùng yêu cầu không commit.
 - Dữ liệu đầu vào, lỗi, bảo mật và quyền truy cập đã được xử lý phù hợp với phạm vi.
 - Tiếng Việt hiển thị đúng UTF-8 và giao diện liên quan hoạt động ở mobile/desktop.
 - Tài liệu hoặc `.env.example` được cập nhật nếu cách cài đặt, cấu hình hoặc sử dụng thay đổi.
