@@ -6,7 +6,7 @@ Tài liệu dùng cho buổi chia sẻ khoảng 45–60 phút. Mục tiêu: mỗ
 
 Nếu gửi code qua tin nhắn, nhóm dễ có các bản `final`, `final2`, `final-chot` và không biết bản nào đúng. Git giúp lưu lịch sử thay đổi; GitHub giúp cả nhóm chia sẻ code và kiểm tra công việc của nhau.
 
-Ví dụ: An làm danh sách sinh viên, Bình làm nhập điểm. Hai người làm trên hai nhánh, rồi lần lượt ghép phần đã kiểm tra vào dự án chung.
+Thực hành ngay trên repo `quan-ly-sinh-vien` của nhóm. Dự án chưa có mã nguồn ứng dụng nên An và Bình sẽ thêm file giới thiệu thành viên trong `docs/`. Mỗi người làm trên một nhánh, rồi ghép tài liệu đã review vào dự án chung. Không cần tạo repo khác hoặc viết chức năng ứng dụng để học Git.
 
 ## 2. Những từ cần hiểu trước
 
@@ -17,7 +17,7 @@ Ví dụ: An làm danh sách sinh viên, Bình làm nhập điểm. Hai người
 | Repository, viết tắt là repo | Dự án cùng lịch sử thay đổi của nó |
 | Local | Bản dự án ở máy mình |
 | Remote | Bản repository ở nơi khác, trong bài này là GitHub |
-| `origin` | Tên mặc định Git đặt cho remote khi clone |
+| `origin` | Tên gọi tắt mặc định cho địa chỉ repo trên GitHub khi clone |
 | Clone | Lấy repo và lịch sử về máy lần đầu |
 | Branch, hay nhánh | Một hướng phát triển riêng trong cùng repo |
 | Stage | Chọn thay đổi để đưa vào lần commit sắp tới |
@@ -76,12 +76,13 @@ Theo tài liệu [phân công công việc](work-assignment-and-technology.md), 
 |---|---|---|
 | `main` | Bản ổn định để demo | Trưởng nhóm ghép bản đã kiểm thử qua PR |
 | `develop` | Ghép và kiểm thử các chức năng của nhóm | Nhận PR đã được review |
+| `docs/ten-tai-lieu` | Thêm hoặc sửa tài liệu, dùng trong buổi thực hành | Người nhận task |
 | `feature/ten-chuc-nang` | Làm một chức năng | Người nhận task |
 | `fix/ten-loi` | Sửa một lỗi | Người nhận sửa lỗi |
 
 ```text
-develop → tạo feature/danh-sach-sinh-vien → làm việc → PR về develop
-develop → tạo feature/nhap-diem          → làm việc → PR về develop
+develop → tạo docs/gioi-thieu-an → làm việc → PR về develop
+develop → tạo docs/gioi-thieu-binh          → làm việc → PR về develop
 develop → kiểm thử bản tích hợp         → PR về main → demo
 ```
 
@@ -98,7 +99,7 @@ Có thể dùng tab **Issues → New issue** để ghi task: tiêu đề, yêu c
 
 ## 5. Thực hành một task từ đầu đến cuối
 
-Các lệnh dưới đây chạy trong terminal. Tên nhánh và đường dẫn file là ví dụ; thay bằng task và file thực tế của mình. Không gõ các đoạn giải thích vào terminal.
+Các lệnh dưới đây chạy trong repo của nhóm, dùng An làm ví dụ. Mỗi bạn thay `an` bằng tên không dấu của mình để có nhánh và file riêng. Bình dùng nhánh `docs/gioi-thieu-binh` và file `docs/gioi-thieu-binh.md`. Không gõ các đoạn giải thích vào terminal.
 
 ### Bước 1 — Clone về máy, chỉ làm lần đầu
 
@@ -110,7 +111,7 @@ cd quan-ly-sinh-vien
 git remote -v
 ```
 
-Clone xong thì dùng thư mục này cho các buổi sau. Không cần clone lại mỗi ngày và không cần chạy `git init` trong repo vừa clone.
+Nếu đã mở repo tại `D:\quanLySinhVien` thì dùng terminal ở đó và bỏ qua bước clone. Thành viên chưa có repo mới cần clone. Clone xong thì dùng thư mục này cho các buổi sau, không cần clone lại mỗi ngày hoặc chạy `git init`.
 
 ### Bước 2 — Cập nhật nhánh chung rồi tạo nhánh riêng
 
@@ -121,7 +122,7 @@ git status
 git fetch origin
 git switch develop
 git pull --ff-only origin develop
-git switch -c feature/danh-sach-sinh-vien
+git switch -c docs/gioi-thieu-an
 git branch --show-current
 ```
 
@@ -131,14 +132,24 @@ git branch --show-current
 
 ### Bước 3 — Làm việc, kiểm tra rồi commit
 
-Ví dụ task của bạn tạo hoặc sửa file `pages/students/student-list.html`. Sau khi sửa và kiểm tra hành vi:
+Trong VS Code, tạo file `docs/gioi-thieu-an.md`, nhập nội dung sau rồi lưu:
+
+```markdown
+# Giới thiệu thành viên An
+
+- Tên gọi: An
+- Phần việc dự kiến: Viết tài liệu cho nhóm
+- Mục tiêu: Biết tạo nhánh, commit, push và mở pull request
+```
+
+Điền phần việc của mình; không cần thêm thông tin cá nhân nhạy cảm. Đọc lại và mở Markdown Preview trong VS Code để kiểm tra hiển thị, rồi chạy:
 
 ```bash
 git status
 git diff
-git add -- pages/students/student-list.html
+git add -- docs/gioi-thieu-an.md
 git diff --staged
-git commit -m "feat(students): thêm bảng danh sách sinh viên gồm mã, tên và lớp"
+git commit -m "docs(team): thêm giới thiệu và mục tiêu học Git của An"
 ```
 
 `git add` chọn nội dung cho commit. Nếu sửa file thêm sau khi add thì phải add lại để lấy bản sửa mới. `git diff` xem phần chưa stage; `git diff --staged` xem chính xác phần sắp commit.
@@ -156,7 +167,7 @@ Message cần nói rõ đã làm gì:
 ### Bước 4 — Push nhánh riêng lên GitHub
 
 ```bash
-git push -u origin feature/danh-sach-sinh-vien
+git push -u origin docs/gioi-thieu-an
 ```
 
 Lần đầu dùng `-u` để liên kết nhánh ở máy với nhánh trên remote. Các lần sau, khi vẫn ở nhánh đó, chỉ cần:
@@ -168,7 +179,7 @@ git push
 ### Bước 5 — Mở pull request trên GitHub
 
 1. Mở repo trên GitHub, vào **Pull requests → New pull request**.
-2. Chọn **base: `develop`**, **compare: `feature/danh-sach-sinh-vien`**. Base là nhánh nhận thay đổi.
+2. Chọn **base: `develop`**, **compare: `docs/gioi-thieu-an`**. Base là nhánh nhận thay đổi.
 3. Xem phần file thay đổi để chắc không lẫn việc khác.
 4. Điền tiêu đề rõ ràng và mô tả, rồi chọn **Create pull request**.
 5. Nhờ người được phân công review; chọn reviewer nếu giao diện và quyền của repo cho phép.
@@ -176,11 +187,11 @@ git push
 Mẫu mô tả PR:
 
 ```text
-Thay đổi: Thêm bảng danh sách sinh viên gồm mã, họ tên và lớp.
-Mục đích: Giáo viên xem được danh sách của lớp.
-Đã kiểm tra: Danh sách có dữ liệu, danh sách rỗng, màn hình điện thoại.
-Cần lưu ý: Hiện dùng dữ liệu giả, chưa nối backend.
-Liên quan: #12 (nếu có Issue số 12).
+Thay đổi: Thêm docs/gioi-thieu-an.md.
+Mục đích: Giới thiệu phần việc và luyện quy trình GitHub của nhóm.
+Đã kiểm tra: Nội dung đủ ba mục, tiếng Việt đúng, Markdown hiển thị rõ.
+Cần lưu ý: Bài thực hành tài liệu, chưa thêm mã nguồn ứng dụng.
+Liên quan: Điền số Issue thật nếu nhóm đã tạo Issue cho việc này.
 ```
 
 ### Bước 6 — Review, sửa góp ý và merge
@@ -209,7 +220,7 @@ Task tiếp theo tạo nhánh mới từ `develop` đã cập nhật. Tất cả
 
 ## 6. Đang làm mà bạn khác đã merge trước thì sao?
 
-Ví dụ bạn đang ở `feature/danh-sach-sinh-vien`, trong khi Bình vừa merge vào `develop`. Commit phần việc đã hoàn chỉnh và đảm bảo `git status` không còn thay đổi chưa commit trước khi đồng bộ:
+Ví dụ bạn đang ở `docs/gioi-thieu-an`, trong khi Bình vừa merge vào `develop`. Commit phần việc đã hoàn chỉnh và đảm bảo `git status` không còn thay đổi chưa commit trước khi đồng bộ:
 
 ```bash
 git fetch origin
@@ -294,18 +305,18 @@ Chưa cần học rebase, cherry-pick hay stash trong buổi đầu. Tránh `git
 | Không switch được vì có thay đổi local | Hoàn tất và commit phần việc trên nhánh đúng trước khi chuyển |
 | PR có quá nhiều file lạ | Có thể tạo nhánh từ sai chỗ hoặc stage lẫn việc; nhờ review trước khi merge |
 
-Nếu nhánh riêng bị từ chối push do remote có thêm commit, đảm bảo file làm việc đã sạch, fetch rồi ghép đúng nhánh remote vào nhánh local tương ứng. Ví dụ khi đang ở `feature/danh-sach-sinh-vien`:
+Nếu nhánh riêng bị từ chối push do remote có thêm commit, đảm bảo file làm việc đã sạch, fetch rồi ghép đúng nhánh remote vào nhánh local tương ứng. Ví dụ khi đang ở `docs/gioi-thieu-an`:
 
 ```bash
 git fetch origin
-git merge origin/feature/danh-sach-sinh-vien
+git merge origin/docs/gioi-thieu-an
 ```
 
 Xử lý conflict nếu có, kiểm tra lại rồi push. Nếu không biết các commit từ đâu ra, hỏi người cùng làm trước khi ghép.
 
 ## 10. Kịch bản demo cho người trình bày
 
-Chuẩn bị repo thực hành riêng để mọi người thử mà không ảnh hưởng dự án thật. Tạo `main`, `develop`, mời hai tài khoản A và B cùng tham gia.
+Dùng ngay repo [quan-ly-sinh-vien](https://github.com/Khanhht801/quan-ly-sinh-vien), không tạo repo thực hành riêng. Trưởng nhóm tạo `develop` từ `main` nếu chưa có và mời thành viên. A là An, B là Bình; mỗi người dùng tài khoản của mình. Các file giới thiệu được giữ làm tài liệu nhóm.
 
 | Thời lượng | Nội dung |
 |---|---|
@@ -317,9 +328,11 @@ Chuẩn bị repo thực hành riêng để mọi người thử mà không ản
 | 10 phút | Demo conflict có chủ đích, cùng chọn nội dung và hoàn tất merge |
 | 5 phút | Mỗi người nhắc lại quy trình và hỏi đáp |
 
-Để demo conflict: chuẩn bị file `docs/demo-nhom.md` có dòng `Tên nhóm: Nhóm thực hành`. A và B tạo hai nhánh từ **cùng một bản develop**, sửa dòng đó thành hai tên khác nhau. Merge PR của A trước; B fetch rồi merge `origin/develop` vào nhánh của B. Khi conflict xuất hiện, cả nhóm thống nhất tên, sửa file và commit kết quả.
+Để demo conflict: A tạo file `docs/demo-nhom.md` có dòng `Tên nhóm: Nhóm 2` trên nhánh riêng, commit, push và mở PR về `develop`. Sau khi review và merge PR chuẩn bị này, A và B cập nhật `develop`. A và B tạo hai nhánh mới từ **cùng một bản develop**, sửa dòng đó thành hai tên khác nhau. Merge PR của A trước; B fetch rồi merge `origin/develop` vào nhánh của B. Khi conflict xuất hiện, cả nhóm thống nhất tên, sửa file, commit và push kết quả rồi hoàn tất PR của B.
 
-Trước buổi chia sẻ, nên tự chạy thử một vòng bằng repo thực hành. Riêng cài đặt và đăng nhập nên nhờ mọi người chuẩn bị trước để không mất phần lớn thời gian của buổi học.
+Sau buổi thực hành, trưởng nhóm mở PR từ `develop` vào `main`, kiểm tra chỉ có các tài liệu dự định đưa vào rồi merge. Như vậy mọi người thấy đủ luồng từ nhánh cá nhân đến nhánh chính ngay trên dự án này.
+
+Trước buổi chia sẻ, nên tự chạy thử một vòng thêm tài liệu trên nhánh riêng của repo này. Riêng cài đặt và đăng nhập nên nhờ mọi người chuẩn bị trước để không mất phần lớn thời gian của buổi học.
 
 ## 11. Tờ nhắc nhanh trước khi kết thúc buổi
 
