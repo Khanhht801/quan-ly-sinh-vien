@@ -147,3 +147,32 @@ Chưa biết xử lý thì `git merge --abort` để hủy lần merge đang con
 - Không dùng `git push --force` hay `git reset --hard` khi chưa hiểu.
 
 **Quy trình:** tạo repo → mời thành viên → tạo develop → clone → tạo nhánh riêng → làm việc → commit → push → PR → review → merge vào develop → kiểm thử → PR vào main.
+
+## 5. Các lệnh thông dụng để tra nhanh
+
+Thay `ten-nhanh`, `ten-file` và `URL` bằng tên nhánh, đường dẫn file và địa chỉ repo thực tế.
+
+| Lệnh | Dùng để |
+|---|---|
+| `git -v` | Kiểm tra phiên bản Git |
+| `git clone URL` | Lấy dự án về máy lần đầu |
+| `git status` | Xem nhánh hiện tại và trạng thái các file |
+| `git branch` | Liệt kê nhánh ở máy; dấu `*` chỉ nhánh hiện tại |
+| `git branch -a` | Xem cả nhánh ở máy và thông tin nhánh trên remote đã lấy về |
+| `git switch ten-nhanh` | Chuyển sang nhánh đã có |
+| `git switch -c feature/ten-viec` | Tạo nhánh mới từ vị trí hiện tại và chuyển sang đó |
+| `git fetch origin` | Lấy thông tin mới từ GitHub, chưa ghép vào file đang làm |
+| `git pull --ff-only origin develop` | Cập nhật develop; chạy khi đang ở nhánh develop ở máy |
+| `git diff` | Xem phần sửa chưa stage của file Git đã theo dõi |
+| `git add -- ten-file` | Chọn thay đổi của một file để commit, kể cả việc xóa file đã theo dõi |
+| `git diff --staged` | Xem nội dung đã chọn để commit |
+| `git restore --staged -- ten-file` | Bỏ chọn file khỏi lần commit tới, giữ phần đã sửa |
+| `git commit -m "mo ta ro thay doi"` | Lưu một mốc thay đổi ở máy |
+| `git push -u origin ten-nhanh` | Đẩy nhánh lên GitHub và thiết lập liên kết theo dõi |
+| `git push` | Đẩy commit mới của nhánh đã có liên kết |
+| `git merge origin/develop` | Ghép develop đã fetch vào nhánh riêng đang làm |
+| `git merge --abort` | Hủy lần merge đang có conflict |
+| `git log --oneline -5` | Xem 5 commit gần nhất |
+| `git remote -v` | Xem địa chỉ repo remote để lấy và gửi code |
+
+PR, review và merge PR thực hiện trên trang GitHub như các bước ở trên; không cần cài thêm công cụ dòng lệnh.
