@@ -60,7 +60,21 @@ git pull --ff-only origin develop
 git switch -c docs/gioi-thieu-an
 ```
 
-`fetch` lấy thông tin từ GitHub; `pull` cập nhật nhánh ở máy. Nếu chưa có `develop` hoặc pull bị từ chối, nhờ trưởng nhóm kiểm tra, không dùng force.
+Đoạn trên nghĩa là: **lấy bản chung mới nhất, rồi tạo nhánh riêng để làm việc**. Chạy lần lượt từng dòng:
+
+| Lệnh | Giải thích |
+|---|---|
+| `git status` | Xem đang ở nhánh nào, có file nào sửa dở hoặc chưa commit không |
+| `git fetch origin` | Lấy thông tin nhánh và commit mới từ GitHub, chưa ghép vào file đang làm |
+| `git switch develop` | Chuyển sang nhánh chung `develop` ở máy |
+| `git pull --ff-only origin develop` | Lấy và cập nhật nhánh đang mở bằng bản `develop` mới nhất trên GitHub. Ở đây phải đang ở `develop`; `--ff-only` sẽ dừng nếu cần tạo commit ghép |
+| `git switch -c docs/gioi-thieu-an` | Tạo nhánh mới tên `docs/gioi-thieu-an` từ `develop` đang mở rồi chuyển sang nhánh mới. `-c` nghĩa là tạo mới |
+
+Sau dòng cuối, An sửa và commit trên **`docs/gioi-thieu-an`**, không còn ở `develop`. Đây là tên nhánh, không phải thư mục; nhánh mới ban đầu có nội dung giống bản `develop` vừa cập nhật.
+
+Chỉ tạo nhánh bằng `-c` khi bắt đầu task mới. Nếu tiếp tục task cũ trên nhánh đã có ở máy, dùng `git switch docs/gioi-thieu-an`, không thêm `-c`.
+
+Nếu chưa có `develop` hoặc pull bị từ chối, nhờ trưởng nhóm kiểm tra, không dùng force.
 
 ### Bước 2: Sửa và commit
 
