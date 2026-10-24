@@ -53,26 +53,14 @@ Ví dụ An thêm file giới thiệu. Các bạn thay `an` bằng tên không d
 Chạy trong thư mục dự án. Nếu có việc dở, hoàn tất và commit trên đúng nhánh trước khi chuyển.
 
 ```bash
-git status
-git fetch origin
-git switch develop
-git pull --ff-only origin develop
-git switch -c docs/gioi-thieu-an
+git status                              # Xem nhánh hiện tại và file đang sửa.
+git fetch origin                        # Lấy thông tin mới từ GitHub, chưa đổi file ở máy.
+git switch develop                      # Chuyển sang nhánh develop ở máy.
+git pull --ff-only origin develop        # Cập nhật develop ở máy bằng bản mới nhất trên GitHub.
+git switch -c docs/gioi-thieu-an         # Tạo nhánh riêng từ develop rồi chuyển sang đó.
 ```
 
-Đoạn trên nghĩa là: **lấy bản chung mới nhất, rồi tạo nhánh riêng để làm việc**. Chạy lần lượt từng dòng:
-
-| Lệnh | Giải thích |
-|---|---|
-| `git status` | Xem đang ở nhánh nào, có file nào sửa dở hoặc chưa commit không |
-| `git fetch origin` | Lấy thông tin nhánh và commit mới từ GitHub, chưa ghép vào file đang làm |
-| `git switch develop` | Chuyển sang nhánh chung `develop` ở máy |
-| `git pull --ff-only origin develop` | Lấy và cập nhật nhánh đang mở bằng bản `develop` mới nhất trên GitHub. Ở đây phải đang ở `develop`; `--ff-only` sẽ dừng nếu cần tạo commit ghép |
-| `git switch -c docs/gioi-thieu-an` | Tạo nhánh mới tên `docs/gioi-thieu-an` từ `develop` đang mở rồi chuyển sang nhánh mới. `-c` nghĩa là tạo mới |
-
-Sau dòng cuối, An sửa và commit trên **`docs/gioi-thieu-an`**, không còn ở `develop`. Đây là tên nhánh, không phải thư mục; nhánh mới ban đầu có nội dung giống bản `develop` vừa cập nhật.
-
-Chỉ tạo nhánh bằng `-c` khi bắt đầu task mới. Nếu tiếp tục task cũ trên nhánh đã có ở máy, dùng `git switch docs/gioi-thieu-an`, không thêm `-c`.
+Tiếp tục nhánh cũ thì dùng `git switch docs/gioi-thieu-an`, không thêm `-c`.
 
 Nếu chưa có `develop` hoặc pull bị từ chối, nhờ trưởng nhóm kiểm tra, không dùng force.
 
